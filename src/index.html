@@ -10,12 +10,20 @@
     <a href="#" class="control_next"> Next </a>
     <a href="#" class="control_prev"> Prev </a>
     <ul>
-      <li class="active">SLIDE 1</li>
-      <li class="next">SLIDE 2</li>
-      <li>SLIDE 3</li>
-      <li class="prev">SLIDE 4</li>
+      <li data-index="1" class="active">SLIDE 1</li>
+      <li data-index="2" class="next">SLIDE 2</li>
+      <li data-index="3">SLIDE 3</li>
+      <li data-index="4" class="prev">SLIDE 4</li>
     </ul>
   </div>
+
+  <nav id="slider-nav">
+    <!-- TODO: use tablist for a11y -->
+    <button data-index="1">1</button>
+    <button data-index="2">2</button>
+    <button data-index="3">3</button>
+    <button data-index="4">4</button>
+  </nav>
 
   <div class="slider_option">
     <input type="checkbox" id="autoplay">

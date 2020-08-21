@@ -11,6 +11,15 @@ document.getElementById('autoplay').addEventListener('change', data => {
   }
 });
 
+/* ### NAV ### */
+
+const sliderNavButtons = document.querySelectorAll('#slider-nav button');
+for (const navButton of sliderNavButtons) {
+  navButton.addEventListener('click', event => {
+    console.log('TODO: implement goTo function!', event.target.dataset.index);
+  });
+}
+
 /* ### SLIDER ### */
 
 let slider = document.getElementById('slider');
