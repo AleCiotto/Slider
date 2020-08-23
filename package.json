@@ -1,0 +1,49 @@
+{
+  "name": "simpleslider",
+  "version": "0.0.1",
+  "description": "this is a fully responsive, accessible and layout shift free slider",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev:build": "rollup -c --watch",
+    "test": "jest --coverage",
+    "dev:test": "jest --watch"
+  },
+  "author": {
+    "name": "Alessandro Mercurio, Denis Mitiliuc"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-transform-object-assign": "^7.10.4",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "babel-jest": "^26.3.0",
+    "babel-loader": "^8.1.0",
+    "jest": "^26.4.0",
+    "rollup": "^2.26.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "typescript": "^3.9.7"
+  },
+  "keywords": [
+    "slider",
+    "carousel",
+    "vanilla",
+    "performance",
+    "no-jquery",
+    "shift layout",
+    "accessible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AleCiotto/Slider"
+  },
+  "files": [
+    "dist"
+  ]
+}
