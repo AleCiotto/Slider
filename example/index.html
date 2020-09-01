@@ -1,37 +1,55 @@
 <html>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
 
-<head>
-  <link rel="stylesheet" href="./style.css">
-</head>
+  <body>
+    <h1>No jQuery, Loop Slider And No DOM Duplication</h1>
+    <div id="slider">
+      <ul>
+        <li data-index="1" class="slide active">SLIDE 1</li>
+        <li data-index="2" class="slide next" aria-hidden="true">SLIDE 2</li>
+        <li data-index="3" class="slide" aria-hidden="true">SLIDE 3</li>
+        <li data-index="4" class="slide prev" aria-hidden="true">SLIDE 4</li>
+      </ul>
+      <ul class="controls">
+        <li class="controls_elem">
+          <button class="control_prev">
+            <img src="arrow_left.png" alt="Previous Item" />
+          </button>
+        </li>
+        <li class="controls_elem">
+          <button class="control_next">
+            <img src="arrow_left.png" alt="Next Item" />
+          </button>
+        </li>
+      </ul>
+      <ul class="navs">
+        <li class="navs_elem">
+          <button><span class="is-vHidden">News</span>1</button>
+        </li>
+        <li class="navs_elem">
+          <button><span class="is-vHidden">News</span>2</button>
+        </li>
+        <li class="navs_elem">
+          <button><span class="is-vHidden">News</span>3</button>
+        </li>
+        <li class="navs_elem">
+          <button><span class="is-vHidden">News</span>4</button>
+        </li>
+      </ul>
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        class="liveregion visuallyhidden"
+      >
+        Item 2 of 3
+      </div>
+    </div>
 
-<body>
-  <h1>No jQuery, Loop Slider And No DOM Duplication</h1>
-  <div id="slider">
-    <a href="#" class="control_next"> Next </a>
-    <a href="#" class="control_prev"> Prev </a>
-    <ul>
-      <li data-index="1" class="active">SLIDE 1</li>
-      <li data-index="2" class="next">SLIDE 2</li>
-      <li data-index="3">SLIDE 3</li>
-      <li data-index="4" class="prev">SLIDE 4</li>
-    </ul>
-  </div>
-
-  <nav id="slider-nav">
-    <!-- TODO: use tablist for a11y -->
-    <button data-index="1">1</button>
-    <button data-index="2">2</button>
-    <button data-index="3">3</button>
-    <button data-index="4">4</button>
-  </nav>
-
-  <div class="slider_option">
-    <input type="checkbox" id="autoplay">
-    <label for="autoplay">Autoplay Slider</label>
-  </div>
-
-  <script src="../dist/simpleslider.iife.js"></script>
-  <script></script>
-</body>
-
+    <script src="../dist/simpleslider.iife.js"></script>
+    <script type="module">
+      var slider = new SimpleSlider.SimpleSlider("#slider");
+    </script>
+  </body>
 </html>
