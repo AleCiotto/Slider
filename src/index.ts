@@ -1,33 +1,18 @@
-import { Options } from "./defaults";
-import { SliderWrapper } from "./worker/sliderWrapper";
+import { Options, OptionsInterface } from "./defaults";
+import { SliderWrapper } from "./sliderWrapper";
 
 export class SimpleSlider {
-  private _sliderElement: HTMLElement;
-  private _wrapperElement: HTMLElement;
-  private _wrapper: SliderWrapper;
+  private _sliderElement?: HTMLElement;
+  private _wrapperElement?: HTMLUListElement;
+  private _wrapper?: SliderWrapper;
+  private _options: OptionsInterface;
 
-  set slider(selector: HTMLElement) {
-    this._sliderElement = selector;
-  }
-  
-  get slider(): HTMLElement {
-    return this._sliderElement;
-  }
-  
-  set wrapper(slider: HTMLElement) {
-    //TODO: Implement selector case from options
-    this._wrapperElement = slider.querySelector('ul');
-    this._wrapper = new SliderWrapper(this.wrapper);
-  }
-
-  get wrapper(): HTMLElement {
-    return this._wrapperElement;
-  }
-
-  constructor(selector: string | HTMLElement, options: Options) {
-    if (selector) {
-      this.slider = typeof selector === 'string' ? document.querySelector(selector) : selector;
-      this.wrapper = this.slider;
+  constructor(selector?: string | HTMLElement, options?: OptionsInterface) {
+    this._options = options != null ? Object.assign(Options, options) : Options;
+    if (selector != null) {
+      this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) as HTMLElement : selector;
+      this._wrapperElement = this._sliderElement.querySelector('ul') as HTMLUListElement;
+      this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
     } else {
       console.error("Wrong selector for slider was used: ", selector);
     }
@@ -37,13 +22,17 @@ export class SimpleSlider {
    * moveRight
    */
   public moveRight() {
-    this._wrapper.moveRight();
+    if (this._wrapper) {
+      this._wrapper.moveRight();
+    }
   }
 
   /**
    * moveLeft
    */
   public moveLeft() {
-    this._wrapper.moveLeft();
+    if (this._wrapper) {
+      this._wrapper.moveLeft();
+    }
   }
 }

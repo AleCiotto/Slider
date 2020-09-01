@@ -1,10 +1,13 @@
-import { Classes } from "../constants";
+import { Classes } from "./constants";
+import { OptionsInterface } from "./defaults";
 
 export class SliderWrapper {
   private _wrapperElement: HTMLElement;
+  private _options: OptionsInterface;
 
-  constructor(wrapperElement: HTMLElement) {
+  constructor(wrapperElement: HTMLElement, options: OptionsInterface) {
     this._wrapperElement = wrapperElement;
+    this._options = options;
   }
 
   /**
