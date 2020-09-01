@@ -16,8 +16,9 @@ export class SimpleSlider {
       this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) as HTMLElement : selector;
       this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector) as HTMLUListElement;
       this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
-      this._prevBtn = document.querySelector(this._options.controls.prevBtn) as HTMLElement;
-      this._nextBtn = document.querySelector(this._options.controls.nextBtn) as HTMLElement;
+      this._prevBtn = document.querySelector(this._options.controls.prevBtnSelector) as HTMLElement;
+      this._nextBtn = document.querySelector(this._options.controls.nextBtnSelector) as HTMLElement;
+      this._init();
     } else {
       console.error("Wrong selector for slider was used: ", selector);
     }

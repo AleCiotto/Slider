@@ -5,14 +5,14 @@ export interface IOptions {
 }
 
 interface IControls {
-  prevBtn: string,
-  nextBtn: string
+  prevBtnSelector: string,
+  nextBtnSelector: string
 }
 
 export const Options: IOptions = {
   wrapperSelector: 'ul',
   controls: {
-    prevBtn: 'control_prev',
-    nextBtn: 'control_next'
+    prevBtnSelector: '.control_prev',
+    nextBtnSelector: '.control_next'
   }
 }

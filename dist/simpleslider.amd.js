@@ -3,8 +3,8 @@ define(['exports'], function (exports) { 'use strict';
   var Options = {
     wrapperSelector: 'ul',
     controls: {
-      prevBtn: 'control_prev',
-      nextBtn: 'control_next'
+      prevBtnSelector: '.control_prev',
+      nextBtnSelector: '.control_next'
     }
   };
 
@@ -50,8 +50,10 @@ define(['exports'], function (exports) { 'use strict';
         this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) : selector;
         this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector);
         this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
-        this._prevBtn = document.querySelector(this._options.controls.prevBtn);
-        this._nextBtn = document.querySelector(this._options.controls.nextBtn);
+        this._prevBtn = document.querySelector(this._options.controls.prevBtnSelector);
+        this._nextBtn = document.querySelector(this._options.controls.nextBtnSelector);
+
+        this._init();
       } else {
         console.error("Wrong selector for slider was used: ", selector);
       }
