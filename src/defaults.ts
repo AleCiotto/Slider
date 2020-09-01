@@ -1,8 +1,18 @@
-export interface OptionsInterface {
+export interface IOptions {
   controlsSelector?: string | HTMLElement,
-  wrapperSelector?: string
+  wrapperSelector: string,
+  controls: IControls
 }
 
-export const Options: OptionsInterface = {
-  wrapperSelector: 'ul'
+interface IControls {
+  prevBtn: string,
+  nextBtn: string
+}
+
+export const Options: IOptions = {
+  wrapperSelector: 'ul',
+  controls: {
+    prevBtn: 'control_prev',
+    nextBtn: 'control_next'
+  }
 }

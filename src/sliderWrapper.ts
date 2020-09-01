@@ -1,26 +1,26 @@
 import { Classes } from "./constants";
-import { OptionsInterface } from "./defaults";
+import { IOptions } from "./defaults";
 
 export class SliderWrapper {
   private _wrapperElement: HTMLElement;
-  private _options: OptionsInterface;
+  private _options: IOptions;
 
-  constructor(wrapperElement: HTMLElement, options: OptionsInterface) {
+  constructor(wrapperElement: HTMLElement, options: IOptions) {
     this._wrapperElement = wrapperElement;
     this._options = options;
   }
 
   /**
-   * moveRight
+   * moveNext
    */
-  public moveRight() {
+  public moveNext() {
     this._wrapperElement.classList.add(Classes.next);
   }
   
   /**
-   * moveLeft
+   * movePrev
    */
-  public moveLeft() {
+  public movePrev() {
     this._wrapperElement.classList.add(Classes.prev);
   }
 }

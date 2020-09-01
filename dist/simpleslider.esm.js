@@ -1,5 +1,9 @@
 var Options = {
-    wrapperSelector: 'ul'
+    wrapperSelector: 'ul',
+    controls: {
+        prevBtn: 'control_prev',
+        nextBtn: 'control_next'
+    }
 };
 
 var Classes = {
@@ -13,15 +17,15 @@ var SliderWrapper = /** @class */ (function () {
         this._options = options;
     }
     /**
-     * moveRight
+     * moveNext
      */
-    SliderWrapper.prototype.moveRight = function () {
+    SliderWrapper.prototype.moveNext = function () {
         this._wrapperElement.classList.add(Classes.next);
     };
     /**
-     * moveLeft
+     * movePrev
      */
-    SliderWrapper.prototype.moveLeft = function () {
+    SliderWrapper.prototype.movePrev = function () {
         this._wrapperElement.classList.add(Classes.prev);
     };
     return SliderWrapper;
@@ -32,27 +36,35 @@ var SimpleSlider = /** @class */ (function () {
         this._options = options != null ? Object.assign(Options, options) : Options;
         if (selector != null) {
             this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) : selector;
-            this._wrapperElement = this._sliderElement.querySelector('ul');
+            this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector);
             this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
+            this._prevBtn = document.querySelector(this._options.controls.prevBtn);
+            this._nextBtn = document.querySelector(this._options.controls.nextBtn);
         }
         else {
             console.error("Wrong selector for slider was used: ", selector);
         }
     }
+    SimpleSlider.prototype._init = function () {
+        if (this._prevBtn)
+            this._prevBtn.addEventListener('click', this.movePrev.bind(this), false);
+        if (this._nextBtn)
+            this._nextBtn.addEventListener('click', this.moveNext.bind(this), false);
+    };
     /**
-     * moveRight
+     * moveNext
      */
-    SimpleSlider.prototype.moveRight = function () {
+    SimpleSlider.prototype.moveNext = function () {
         if (this._wrapper) {
-            this._wrapper.moveRight();
+            this._wrapper.moveNext();
         }
     };
     /**
-     * moveLeft
+     * movePrev
      */
-    SimpleSlider.prototype.moveLeft = function () {
+    SimpleSlider.prototype.movePrev = function () {
         if (this._wrapper) {
-            this._wrapper.moveLeft();
+            this._wrapper.movePrev();
         }
     };
     return SimpleSlider;

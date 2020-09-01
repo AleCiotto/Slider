@@ -1,38 +1,48 @@
-import { Options, OptionsInterface } from "./defaults";
+import { Options, IOptions } from "./defaults";
 import { SliderWrapper } from "./sliderWrapper";
 
 export class SimpleSlider {
   private _sliderElement?: HTMLElement;
   private _wrapperElement?: HTMLUListElement;
   private _wrapper?: SliderWrapper;
-  private _options: OptionsInterface;
+  private _options: IOptions;
+  private _prevBtn?: HTMLElement;
+  private _nextBtn?: HTMLElement;
 
-  constructor(selector?: string | HTMLElement, options?: OptionsInterface) {
+
+  constructor(selector?: string | HTMLElement, options?: IOptions) {
     this._options = options != null ? Object.assign(Options, options) : Options;
     if (selector != null) {
       this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) as HTMLElement : selector;
-      this._wrapperElement = this._sliderElement.querySelector('ul') as HTMLUListElement;
+      this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector) as HTMLUListElement;
       this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
+      this._prevBtn = document.querySelector(this._options.controls.prevBtn) as HTMLElement;
+      this._nextBtn = document.querySelector(this._options.controls.nextBtn) as HTMLElement;
     } else {
       console.error("Wrong selector for slider was used: ", selector);
     }
   }
 
+  _init() {
+    if (this._prevBtn) this._prevBtn.addEventListener('click', this.movePrev.bind(this), false);
+    if (this._nextBtn) this._nextBtn.addEventListener('click', this.moveNext.bind(this), false);
+  }
+
   /**
-   * moveRight
+   * moveNext
    */
-  public moveRight() {
+  public moveNext() {
     if (this._wrapper) {
-      this._wrapper.moveRight();
+      this._wrapper.moveNext();
     }
   }
 
   /**
-   * moveLeft
+   * movePrev
    */
-  public moveLeft() {
+  public movePrev() {
     if (this._wrapper) {
-      this._wrapper.moveLeft();
+      this._wrapper.movePrev();
     }
   }
 }
