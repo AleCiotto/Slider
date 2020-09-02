@@ -8,6 +8,11 @@ export class SliderWrapper {
   constructor(wrapperElement: HTMLElement, options: IOptions) {
     this._wrapperElement = wrapperElement;
     this._options = options;
+    this._eventsHandler();
+  }
+
+  private _eventsHandler() {
+    this._wrapperElement.addEventListener('animationend', this._animationEnd.bind(this), false);
   }
 
   /**
@@ -22,5 +27,9 @@ export class SliderWrapper {
    */
   public movePrev() {
     this._wrapperElement.classList.add(Classes.prev);
+  }
+
+  private _animationEnd() {
+    
   }
 }

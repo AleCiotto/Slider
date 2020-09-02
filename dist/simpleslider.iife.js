@@ -20,7 +20,13 @@ var SimpleSlider = (function (exports) {
     function SliderWrapper(wrapperElement, options) {
       this._wrapperElement = wrapperElement;
       this._options = options;
+
+      this._eventsHandler();
     }
+
+    SliderWrapper.prototype._eventsHandler = function () {
+      this._wrapperElement.addEventListener('animationend', this._animationEnd.bind(this), false);
+    };
     /**
      * moveNext
      */
@@ -37,6 +43,8 @@ var SimpleSlider = (function (exports) {
     SliderWrapper.prototype.movePrev = function () {
       this._wrapperElement.classList.add(Classes.prev);
     };
+
+    SliderWrapper.prototype._animationEnd = function () {};
 
     return SliderWrapper;
   }();
