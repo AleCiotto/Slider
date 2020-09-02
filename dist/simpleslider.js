@@ -21,14 +21,14 @@
   /** @class */
   function () {
     function SliderWrapper(wrapperElement, options) {
-      this._wrapperElement = wrapperElement;
+      this._wrapElem = wrapperElement;
       this._options = options;
 
       this._eventsHandler();
     }
 
     SliderWrapper.prototype._eventsHandler = function () {
-      this._wrapperElement.addEventListener('animationend', this._animationEnd.bind(this), false);
+      this._wrapElem.addEventListener('animationend', this._animationEnd.bind(this), false);
     };
     /**
      * moveNext
@@ -36,7 +36,7 @@
 
 
     SliderWrapper.prototype.moveNext = function () {
-      this._wrapperElement.classList.add(Classes.next);
+      this._wrapElem.classList.add(Classes.next);
     };
     /**
      * movePrev
@@ -44,10 +44,15 @@
 
 
     SliderWrapper.prototype.movePrev = function () {
-      this._wrapperElement.classList.add(Classes.prev);
+      this._wrapElem.classList.add(Classes.prev);
     };
 
-    SliderWrapper.prototype._animationEnd = function () {};
+    SliderWrapper.prototype._animationEnd = function () {
+      // set the new state switching the slides
+      this._wrapElem.classList.remove(Classes.prev);
+
+      this._wrapElem.classList.remove(Classes.next);
+    };
 
     return SliderWrapper;
   }();
