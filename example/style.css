@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600);	
 
+/* reset style */
 html {
   background: #515151;
   color: #2a2a2a;
@@ -17,14 +18,23 @@ h1 {
   font-weight: 300;
 }
 
-#slider {
-  position: relative;
-  overflow: hidden;
-  margin: 20px auto 0 auto;
-  border-radius: 4px;
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
-#slider ul {
+/* SLIDER STYLE */
+.slider {
+  position: relative;
+  margin: 20px auto 0;
+  border-radius: 4px;
+  width: 30vw;
+}
+
+.slider_wrapper {
+  width: 100%;
+  overflow: hidden;
   position: relative;
   margin: 0;
   padding: 0;
@@ -33,24 +43,25 @@ h1 {
   animation-fill-mode: forwards;
 }
 
-#slider ul li {
+.slides {
+  height: 100%;
+  width: 100%;
+}
+
+.slide {
   position: absolute;
   display: block;
   float: left;
   margin: 0;
   padding: 0;
-  width: 500px;
-  height: 300px;
+  width: 100%;
+  height: 100%; /* TODO: Test this rule on iOS devices */
   background: #ccc;
   text-align: center;
   line-height: 300px;
 }
 
-.active, .prev, .next {
-  z-index: 9;
-}
-
-a.control_prev, a.control_next {
+.control {
   position: absolute;
   top: 40%;
   z-index: 999;
@@ -67,16 +78,17 @@ a.control_prev, a.control_next {
   cursor: pointer;
 }
 
-a.control_prev:hover, a.control_next:hover {
+.control:hover {
   opacity: 1;
   -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-a.control_prev {
+.control_prev {
   border-radius: 0 2px 2px 0;
 }
 
-a.control_next {
+.control_next {
   right: 0;
   border-radius: 2px 0 0 2px;
 }
@@ -88,21 +100,27 @@ a.control_next {
   font-size: 18px;
 }
 
-#slider ul.next {
+.slides.next {
   animation-name: fromRightToLeft;
   animation-duration: 1s;
 }
 
-#slider ul.prev {
+.slides.prev {
   animation-name: fromLeftToRight;
   animation-duration: 1s;
 }
 
-#slider ul li.prev {
+.slide_prev,
+.slide_next,
+.slide_active {
+  z-index: 9;
+}
+
+.slide_prev {
   transform: translate3d(-100%, 0, 0);
 }
 
-#slider ul li.next {
+.slide_next {
   transform: translate3d(100%, 0, 0);
 }
 

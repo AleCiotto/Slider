@@ -5,21 +5,23 @@
 
   <body>
     <h1>No jQuery, Loop Slider And No DOM Duplication</h1>
-    <div id="slider" class="slider">
-      <ul class="slider_wrapper">
-        <li data-index="1" class="slide active">SLIDE 1</li>
-        <li data-index="2" class="slide next" aria-hidden="true">SLIDE 2</li>
-        <li data-index="3" class="slide" aria-hidden="true">SLIDE 3</li>
-        <li data-index="4" class="slide prev" aria-hidden="true">SLIDE 4</li>
-      </ul>
+    <div class="slider">
+      <div class="slider_wrapper">
+        <ul class="slides">
+          <li data-index="1" class="slide slide_active">SLIDE 1</li>
+          <li data-index="2" class="slide slide_next" aria-hidden="true">SLIDE 2</li>
+          <li data-index="3" class="slide" aria-hidden="true">SLIDE 3</li>
+          <li data-index="4" class="slide slide_prev" aria-hidden="true">SLIDE 4</li>
+        </ul>
+      </div>
       <ul class="controls">
         <li class="controls_elem">
-          <button class="control_prev">
+          <button class="control control_prev">
             <img src="arrow_left.png" alt="Previous Item" />
           </button>
         </li>
         <li class="controls_elem">
-          <button class="control_next">
+          <button class="control control_next">
             <img src="arrow_left.png" alt="Next Item" />
           </button>
         </li>
@@ -49,7 +51,7 @@
 
     <script src="../dist/simpleslider.iife.js"></script>
     <script type="module">
-      var slider = new SimpleSlider.SimpleSlider("#slider");
+      var slider = new SimpleSlider.SimpleSlider(".slider");
     </script>
   </body>
 </html>
