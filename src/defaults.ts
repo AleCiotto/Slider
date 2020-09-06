@@ -1,7 +1,10 @@
+import { Classes } from "./constants";
+
 export interface IOptions {
   controlsSelector?: string | HTMLElement,
   wrapperSelector: string,
-  controls: IControls
+  controls: IControls,
+  slides: ISlides
 }
 
 interface IControls {
@@ -9,10 +12,46 @@ interface IControls {
   nextBtnSelector: string
 }
 
+interface ISlides {
+  slideSelector: string,
+  activeSlideSelector: string,
+  prevSlideSelector: string,
+  nextSlideSelector: string
+}
+
 export const Options: IOptions = {
-  wrapperSelector: 'ul',
+  wrapperSelector: '.'.concat(Classes.wrapper),
   controls: {
-    prevBtnSelector: '.control_prev',
-    nextBtnSelector: '.control_next'
+    prevBtnSelector: '.'.concat(Classes.prevBtn),
+    nextBtnSelector: '.'.concat(Classes.nextBtn)
+  },
+  slides: {
+    slideSelector: '.'.concat(Classes.slides.slide),
+    activeSlideSelector: '.'.concat(Classes.slides.active),
+    prevSlideSelector: '.'.concat(Classes.slides.prev),
+    nextSlideSelector: '.'.concat(Classes.slides.next)
   }
+}
+
+export enum Direction {
+  Prev,
+  Next
+}
+
+export interface IActors {
+  updateOnPrevMove: any,
+  updateOnNextMove: any,
+  current: any
+}
+
+export interface ICurrentActors {
+  active: number,
+  prev: number,
+  next: number
+}
+
+export interface ISlide {
+  active: HTMLElement,
+  prev: HTMLElement,
+  next: HTMLElement
 }
