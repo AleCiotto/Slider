@@ -43,6 +43,7 @@ var SimpleSlider = (function (exports) {
       this._options = options;
       this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
       this._actors = this._createActors();
+      this._animating = false;
       this._slide = {
         active: this._slides[this._actors.current().active],
         prev: this._slides[this._actors.current().prev],
@@ -103,11 +104,13 @@ var SimpleSlider = (function (exports) {
 
 
     SliderWrapper.prototype.movePrev = function () {
-      //update next actor
-      this._actors.updateOnPrevMove(); // this._updateNextSlide(this._actors.current().next);
+      if (!this._animating) {
+        this._animating = true;
 
+        this._actors.updateOnPrevMove();
 
-      this._wrapElem.classList.add(Classes.prev);
+        this._wrapElem.classList.add(Classes.prev);
+      }
     };
     /**
      * moveNext
@@ -115,11 +118,13 @@ var SimpleSlider = (function (exports) {
 
 
     SliderWrapper.prototype.moveNext = function () {
-      //update prev actor
-      this._actors.updateOnNextMove(); // this._updatePrevSlide(this._actors.current().prev);
+      if (!this._animating) {
+        this._animating = true;
 
+        this._actors.updateOnNextMove();
 
-      this._wrapElem.classList.add(Classes.next);
+        this._wrapElem.classList.add(Classes.next);
+      }
     };
 
     SliderWrapper.prototype._animationEnd = function () {
@@ -129,6 +134,8 @@ var SimpleSlider = (function (exports) {
       this._wrapElem.classList.remove(Classes.prev);
 
       this._wrapElem.classList.remove(Classes.next);
+
+      this._animating = false;
     };
 
     SliderWrapper.prototype._updateSlides = function (actors) {
