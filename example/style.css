@@ -101,13 +101,17 @@ ul {
 }
 
 .slides.next {
-  animation-name: fromRightToLeft;
-  animation-duration: 1s;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 1000ms linear;
+  will-change: transform;
 }
 
 .slides.prev {
-  animation-name: fromLeftToRight;
-  animation-duration: 1s;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+  transition: transform 1000ms linear;
+  will-change: transform;
 }
 
 .slide_prev,

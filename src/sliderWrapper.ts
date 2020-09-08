@@ -68,7 +68,7 @@ export class SliderWrapper {
   }
 
   private _eventsHandler() {
-    this._wrapElem.addEventListener('animationend', this._animationEnd.bind(this), false);
+    this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
   }
 
   /**
@@ -77,6 +77,10 @@ export class SliderWrapper {
   public movePrev() {
     if (!this._animating) {
       this._animating = true;
+      if (this._slides.length === 2) {
+        this._clearSlideClasses(this._slides[this._actors.current().next])
+        this._updatePrevSlide(this._actors.current().prev)
+      }
       this._actors.updateOnPrevMove();
       this._wrapElem.classList.add(Classes.prev);
     }
@@ -122,12 +126,16 @@ export class SliderWrapper {
   private _updateSlide(slideName: keyof ISlide, slideId: number) {
     if (!this._slide[slideName]) {
       this._slide[slideName] = this._slides[slideId]
-    } else if (this._slide[slideName] === this._slides[slideId]) {
-      return false;
     } else {
       this._slide[slideName].classList.remove(Classes.slides[slideName]);
       this._slide[slideName] = this._slides[slideId];
       this._slide[slideName].classList.add(Classes.slides[slideName]);
     }
+  }
+
+  private _clearSlideClasses(slide: HTMLElement) {
+    slide.classList.remove(Classes.slides.active);
+    slide.classList.remove(Classes.slides.prev);
+    slide.classList.remove(Classes.slides.next);
   }
 }
