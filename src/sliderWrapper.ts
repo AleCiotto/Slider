@@ -68,7 +68,7 @@ export class SliderWrapper {
   }
 
   private _eventsHandler() {
-    this._wrapElem.addEventListener('animationend', this._animationEnd.bind(this), false);
+    this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
   }
 
   /**
@@ -131,12 +131,16 @@ export class SliderWrapper {
   private _updateSlide(slideName: keyof ISlide, slideId: number) {
     if (!this._slide[slideName]) {
       this._slide[slideName] = this._slides[slideId]
-    } else if (this._slide[slideName] === this._slides[slideId]) {
-      return false;
     } else {
       this._slide[slideName].classList.remove(Classes.slides[slideName]);
       this._slide[slideName] = this._slides[slideId];
       this._slide[slideName].classList.add(Classes.slides[slideName]);
     }
+  }
+
+  private _clearSlideClasses(slide: HTMLElement) {
+    slide.classList.remove(Classes.slides.active);
+    slide.classList.remove(Classes.slides.prev);
+    slide.classList.remove(Classes.slides.next);
   }
 }
