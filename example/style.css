@@ -25,7 +25,8 @@ ul {
 }
 
 /* SLIDER STYLE */
-.slider {
+.slider,
+.slider2 {
   position: relative;
   margin: 20px auto 0;
   border-radius: 4px;

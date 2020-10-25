@@ -3,3 +3,4 @@ This is a simple easy to use carousele. Fully accessible and layout shifting fre
 
 TODO: check two slide slider
 TODO: reset slide if not active, prev or next
+TODO: manage multiple sliders in the same page

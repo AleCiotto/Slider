@@ -195,18 +195,18 @@
     return SliderWrapper;
   }();
 
-  var SimpleSlider =
+  var Slider =
   /** @class */
   function () {
-    function SimpleSlider(selector, options) {
+    function Slider(selector, options) {
       this._options = options != null ? Object.assign(Options, options) : Options;
 
       if (selector != null) {
         this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) : selector;
         this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector);
         this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
-        this._prevBtn = document.querySelector(this._options.controls.prevBtnSelector);
-        this._nextBtn = document.querySelector(this._options.controls.nextBtnSelector);
+        this._prevBtn = this._sliderElement.querySelector(this._options.controls.prevBtnSelector);
+        this._nextBtn = this._sliderElement.querySelector(this._options.controls.nextBtnSelector);
 
         this._init();
       } else {
@@ -214,7 +214,7 @@
       }
     }
 
-    SimpleSlider.prototype._init = function () {
+    Slider.prototype._init = function () {
       if (this._prevBtn) this._prevBtn.addEventListener('click', this.movePrev.bind(this), false);
       if (this._nextBtn) this._nextBtn.addEventListener('click', this.moveNext.bind(this), false);
     };
@@ -223,7 +223,7 @@
      */
 
 
-    SimpleSlider.prototype.moveNext = function () {
+    Slider.prototype.moveNext = function () {
       if (this._wrapper) {
         this._wrapper.moveNext();
       }
@@ -233,16 +233,16 @@
      */
 
 
-    SimpleSlider.prototype.movePrev = function () {
+    Slider.prototype.movePrev = function () {
       if (this._wrapper) {
         this._wrapper.movePrev();
       }
     };
 
-    return SimpleSlider;
+    return Slider;
   }();
 
-  exports.SimpleSlider = SimpleSlider;
+  exports.Slider = Slider;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

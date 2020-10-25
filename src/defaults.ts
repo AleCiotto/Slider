@@ -33,15 +33,12 @@ export const Options: IOptions = {
   }
 }
 
+/**
+ * @description Direction where to move the slider
+ */
 export enum Direction {
   Prev,
   Next
-}
-
-export interface IActors {
-  updateOnPrevMove: any,
-  updateOnNextMove: any,
-  current: any
 }
 
 export interface ICurrentActors {
@@ -50,6 +47,10 @@ export interface ICurrentActors {
   next: number
 }
 
+/**
+ * @description Slide state in slider
+ * @enum e active prev, next
+ */
 export interface ISlide {
   active: HTMLElement,
   prev: HTMLElement,
