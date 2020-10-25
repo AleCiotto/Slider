@@ -106,6 +106,12 @@ define(['exports'], function (exports) { 'use strict';
       if (!this._animating) {
         this._animating = true;
 
+        if (this._slide.prev === this._slide.next) {
+          this._resetSlide(this._actors.current().next);
+
+          this._updatePrevSlide(this._actors.current().active + 1);
+        }
+
         this._actors.updateOnPrevMove();
 
         this._wrapElem.classList.add(Classes.prev);
@@ -127,7 +133,6 @@ define(['exports'], function (exports) { 'use strict';
     };
 
     SliderWrapper.prototype._animationEnd = function () {
-      // update all actors
       this._updateSlides(this._actors.current());
 
       this._wrapElem.classList.remove(Classes.prev);
@@ -155,6 +160,14 @@ define(['exports'], function (exports) { 'use strict';
 
     SliderWrapper.prototype._updateNextSlide = function (slideId) {
       this._updateSlide('next', slideId);
+    };
+
+    SliderWrapper.prototype._resetSlide = function (slideId) {
+      this._slides[slideId].classList.remove(Classes.slides.active);
+
+      this._slides[slideId].classList.remove(Classes.slides.prev);
+
+      this._slides[slideId].classList.remove(Classes.slides.next);
     };
 
     SliderWrapper.prototype._updateSlide = function (slideName, slideId) {

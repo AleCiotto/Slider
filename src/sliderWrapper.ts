@@ -77,6 +77,10 @@ export class SliderWrapper {
   public movePrev() {
     if (!this._animating) {
       this._animating = true;
+      if (this._slide.prev === this._slide.next) {
+        this._resetSlide(this._actors.current().next)
+        this._updatePrevSlide(this._actors.current().active + 1);
+      }
       this._actors.updateOnPrevMove();
       this._wrapElem.classList.add(Classes.prev);
     }
@@ -94,7 +98,6 @@ export class SliderWrapper {
   }
 
   private _animationEnd() {
-    // update all actors
     this._updateSlides(this._actors.current());
     this._wrapElem.classList.remove(Classes.prev);
     this._wrapElem.classList.remove(Classes.next);
@@ -117,6 +120,12 @@ export class SliderWrapper {
   
   private _updateNextSlide(slideId: number) {
     this._updateSlide('next', slideId);
+  }
+
+  private _resetSlide(slideId: number) {
+    this._slides[slideId].classList.remove(Classes.slides.active);
+    this._slides[slideId].classList.remove(Classes.slides.prev);
+    this._slides[slideId].classList.remove(Classes.slides.next);
   }
 
   private _updateSlide(slideName: keyof ISlide, slideId: number) {
