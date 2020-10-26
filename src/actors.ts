@@ -20,10 +20,10 @@ interface IActorsProps {
  * @description Create the actors that are used to get the index of acting sliders
  */
 export class Actors {
-  private _changeActor: ICurrentActors;
   public active: number = 0;
   public prev: number = 0;
   public next: number = 0;
+  private _changeActors: (direction: Direction) => ICurrentActors;
 
   constructor(props: IActorsProps) {
     let active = props.active;
@@ -31,7 +31,7 @@ export class Actors {
     let next = props.next;
     let slideLength = props.prev;
 
-    const changeActor: ICurrentActors = (direction: Direction) => {
+    const changeActors = (direction: Direction): ICurrentActors => {
       if (direction === Direction.Next) {
         active = active != slideLength ? ++active : 0;
         prev = prev != slideLength ? ++prev : 0;
@@ -41,20 +41,17 @@ export class Actors {
         prev = prev ? --prev : slideLength;
         next = next ? --next : slideLength;
       }
-      
-      let actors: ICurrentActors = { active, prev, next };
-      
-      return actors;
+      this.active = active;
+      this.prev = prev;
+      this.next = next;
+  
+      return {active, prev, next}
     }
 
-    this._changeActor = changeActor;
+    this._changeActors = changeActors;
   }
 
-  public updateOnPrevMove() {
-    this._changeActor(Direction.Prev);
-  }
-
-  public updateOnNextMove() {
-    this._changeActor(Direction.Next);
+  changeActors(direction: Direction): ICurrentActors {
+    return this._changeActors(direction);
   }
 }

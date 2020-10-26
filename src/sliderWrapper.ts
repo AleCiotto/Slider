@@ -2,7 +2,8 @@ import { Classes } from "./constants";
 import { 
   IOptions,
   ICurrentActors,
-  ISlide } from "./defaults";
+  ISlide, 
+  Direction} from "./defaults";
 import { Actors } from './actors';
 
 export class SliderWrapper {
@@ -17,18 +18,19 @@ export class SliderWrapper {
     this._wrapElem = wrapperElement;
     this._options = options;
     this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
-    this._actors = new Actors({
+    let actors = {
       active: 0,
       next: 1,
       prev: this._slides.length - 1
-    });
+    }
+    this._actors = new Actors(actors);
     this._animating = false;
     this._slide = {
-      active: this._slides[this._actors.active],
-      prev: this._slides[this._actors.prev],
-      next: this._slides[this._actors.next]
+      active: this._slides[actors.active],
+      prev: this._slides[actors.prev],
+      next: this._slides[actors.next]
     }
-    this._updateSlides(this._actors.current());
+    this._updateSlides(actors);
     if (this._slides.length) {
       this._eventsHandler();
     }
@@ -45,10 +47,10 @@ export class SliderWrapper {
     if (!this._animating) {
       this._animating = true;
       if (this._slide.prev === this._slide.next) {
-        this._resetSlide(this._actors.current().next)
-        this._updatePrevSlide(this._actors.current().active + 1);
+        this._resetSlide(this._actors.next)
+        this._updateSlide('prev', this._actors.active + 1);
       }
-      this._actors.updateOnPrevMove();
+      this._actors.changeActors(Direction.Prev);
       this._wrapElem.classList.add(Classes.prev);
     }
   }
@@ -59,22 +61,22 @@ export class SliderWrapper {
   public moveNext() {
     if (!this._animating) {
       this._animating = true;
-      this._actors.updateOnNextMove();
+      this._updateSlide('next', this._actors.next);
       this._wrapElem.classList.add(Classes.next);
     }
   }
 
   private _animationEnd() {
-    this._updateSlides(this._actors.current());
+    this._updateSlides(this._actors);
     this._wrapElem.classList.remove(Classes.prev);
     this._wrapElem.classList.remove(Classes.next);
     this._animating = false;
   }
 
   private _updateSlides(actors: ICurrentActors) {
-    this._updateSlide('active', slideId);
-    this._updateSlide('prev', slideId);
-    this._updateSlide('next', slideId);
+    this._updateSlide('active', actors.active);
+    this._updateSlide('next', actors.next);
+    this._updateSlide('prev', actors.prev);
   }
 
   private _resetSlide(slideId: number) {

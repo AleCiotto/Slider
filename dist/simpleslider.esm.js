@@ -25,64 +25,76 @@ var Options = {
         nextSlideSelector: '.'.concat(Classes.slides.next)
     }
 };
+/**
+ * @description Direction where to move the slider
+ */
 var Direction;
 (function (Direction) {
     Direction[Direction["Prev"] = 0] = "Prev";
     Direction[Direction["Next"] = 1] = "Next";
 })(Direction || (Direction = {}));
 
+// TODO: Evaluate if need to move this class
+// in worker
+/**
+ * @description Create the actors that are used to get the index of acting sliders
+ */
+var Actors = /** @class */ (function () {
+    function Actors(props) {
+        var _this = this;
+        this.active = 0;
+        this.prev = 0;
+        this.next = 0;
+        var active = props.active;
+        var prev = props.prev;
+        var next = props.next;
+        var slideLength = props.prev;
+        var changeActors = function (direction) {
+            if (direction === Direction.Next) {
+                active = active != slideLength ? ++active : 0;
+                prev = prev != slideLength ? ++prev : 0;
+                next = next != slideLength ? ++next : 0;
+            }
+            else {
+                active = active ? --active : slideLength;
+                prev = prev ? --prev : slideLength;
+                next = next ? --next : slideLength;
+            }
+            _this.active = active;
+            _this.prev = prev;
+            _this.next = next;
+            return { active: active, prev: prev, next: next };
+        };
+        this._changeActors = changeActors;
+    }
+    Actors.prototype.changeActors = function (direction) {
+        return this._changeActors(direction);
+    };
+    return Actors;
+}());
+
 var SliderWrapper = /** @class */ (function () {
     function SliderWrapper(wrapperElement, options) {
         this._wrapElem = wrapperElement;
         this._options = options;
         this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
-        this._actors = this._createActors();
+        var actors = {
+            active: 0,
+            next: 1,
+            prev: this._slides.length - 1
+        };
+        this._actors = new Actors(actors);
         this._animating = false;
         this._slide = {
-            active: this._slides[this._actors.current().active],
-            prev: this._slides[this._actors.current().prev],
-            next: this._slides[this._actors.current().next]
+            active: this._slides[actors.active],
+            prev: this._slides[actors.prev],
+            next: this._slides[actors.next]
         };
-        this._updateSlides(this._actors.current());
+        this._updateSlides(actors);
         if (this._slides.length) {
             this._eventsHandler();
         }
     }
-    SliderWrapper.prototype._createActors = function () {
-        var _this = this;
-        var active = 0;
-        var prev = this._slides.length - 1;
-        var next = 1;
-        var changeActor = function (direction) {
-            if (direction === Direction.Prev) {
-                active = !active ? _this._slides.length - 1 : --active;
-                prev = !prev ? _this._slides.length - 1 : --prev;
-                next = !next ? _this._slides.length - 1 : --next;
-                console.log('Moving Prev', active, prev, next);
-            }
-            else {
-                active = active === _this._slides.length - 1 ? 0 : ++active;
-                prev = prev === _this._slides.length - 1 ? 0 : ++prev;
-                next = next === _this._slides.length - 1 ? 0 : ++next;
-                console.log('Moving Next', active, prev, next);
-            }
-        };
-        return {
-            updateOnPrevMove: function () {
-                changeActor(Direction.Prev);
-            },
-            updateOnNextMove: function () {
-                changeActor(Direction.Next);
-            },
-            current: function () {
-                return {
-                    active: active,
-                    prev: prev,
-                    next: next
-                };
-            }
-        };
-    };
     SliderWrapper.prototype._eventsHandler = function () {
         this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
     };
@@ -93,10 +105,10 @@ var SliderWrapper = /** @class */ (function () {
         if (!this._animating) {
             this._animating = true;
             if (this._slide.prev === this._slide.next) {
-                this._resetSlide(this._actors.current().next);
-                this._updatePrevSlide(this._actors.current().active + 1);
+                this._resetSlide(this._actors.next);
+                this._updateSlide('prev', this._actors.active + 1);
             }
-            this._actors.updateOnPrevMove();
+            this._actors.changeActors(Direction.Prev);
             this._wrapElem.classList.add(Classes.prev);
         }
     };
@@ -106,29 +118,20 @@ var SliderWrapper = /** @class */ (function () {
     SliderWrapper.prototype.moveNext = function () {
         if (!this._animating) {
             this._animating = true;
-            this._actors.updateOnNextMove();
+            this._updateSlide('next', this._actors.next);
             this._wrapElem.classList.add(Classes.next);
         }
     };
     SliderWrapper.prototype._animationEnd = function () {
-        this._updateSlides(this._actors.current());
+        this._updateSlides(this._actors);
         this._wrapElem.classList.remove(Classes.prev);
         this._wrapElem.classList.remove(Classes.next);
         this._animating = false;
     };
     SliderWrapper.prototype._updateSlides = function (actors) {
-        this._updateActiveSlide(actors.active);
-        this._updatePrevSlide(actors.prev);
-        this._updateNextSlide(actors.next);
-    };
-    SliderWrapper.prototype._updateActiveSlide = function (slideId) {
-        this._updateSlide('active', slideId);
-    };
-    SliderWrapper.prototype._updatePrevSlide = function (slideId) {
-        this._updateSlide('prev', slideId);
-    };
-    SliderWrapper.prototype._updateNextSlide = function (slideId) {
-        this._updateSlide('next', slideId);
+        this._updateSlide('active', actors.active);
+        this._updateSlide('next', actors.next);
+        this._updateSlide('prev', actors.prev);
     };
     SliderWrapper.prototype._resetSlide = function (slideId) {
         this._slides[slideId].classList.remove(Classes.slides.active);
