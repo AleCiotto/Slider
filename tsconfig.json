@@ -1,8 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es5"
-  },
-  "include": [
-    "*.ts"
-  ]
+    "experimentalDecorators": true,
+    "target": "es5",
+    "downlevelIteration": true,
+    "module": "esnext",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "strict": true,
+    "moduleResolution": "node",
+    "outDir": ".ts-tmp",
+    "composite": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "importHelpers": true,
+    "baseUrl": "./",
+    "rootDir": "./"
+  }
 }
