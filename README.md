@@ -10,3 +10,5 @@ TODO: Test loop
 TODO: Test slider with two slides only
 TODO: Manage multiple sliders in the same page
 TODO: Test multimple sliders in the same page
+TODO: Implement GoTo funtion
+TODO: Test GoTo funtion
