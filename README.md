@@ -14,19 +14,19 @@ After this a localhost page will open with the app
 You are free to fork and modify this project for your needs.
 
 ### Copyrights
-All the copyrights stays for AleCiotto and iDenisM
+All the copyrights stays for AleCiotto and iDenisM.
 
 ### Tasks in progress
-DONE: Actors class
-DONE: Actors class test
-
-TRIAGE: Base arrow movement (No loop)
-
-TODO: Test base arrow movement (No loop)
-TODO: Implement loop
-TODO: Test loop
-TODO: Test slider with two slides only
-TODO: Manage multiple sliders in the same page
-TODO: Test multimple sliders in the same page
-TODO: Implement GoTo funtion
-TODO: Test GoTo funtion
+* **DONE**: ~~Actors class~~.
+* **DONE**: ~~Actors class test~~.
+---
+* **TRIAGE**: *Base arrow movement (No loop).*
+---
+* **TODO**: Test base arrow movement (No loop).
+* **TODO**: Implement loop.
+* **TODO**: Test loop.
+* **TODO**: Test slider with two slides only.
+* **TODO**: Manage multiple sliders in the same page.
+* **TODO**: Test multimple sliders in the same page.
+* **TODO**: Implement GoTo funtion.
+* **TODO**: Test GoTo funtion.
