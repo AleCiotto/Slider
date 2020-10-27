@@ -2,7 +2,9 @@ Simple Carousel
 This is a simple easy to use carousele. Fully accessible and layout shifting free.
 
 DONE: Actors class
+
 DOING: Actors class test
+
 TODO: Base arrow movement (No loop)
 TODO: Test base arrow movement (No loop)
 TODO: Implement loop
