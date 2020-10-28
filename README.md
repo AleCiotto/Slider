@@ -20,9 +20,10 @@ All the copyrights stays for AleCiotto and iDenisM.
 * **DONE**: ~~Actors class~~.
 * **DONE**: ~~Actors class test~~.
 ---
-* **DOING**: *Base arrow movement (No sloop).*
+* **TEST**: *Base arrow movement (No sloop).*
 ---
-* **TODO**: Test base arrow movement (No loop).
+* **TRIAGE**: Test base arrow movement (No loop).
+---
 * **TODO**: Implement loop.
 * **TODO**: Test loop.
 * **TODO**: Test slider with two slides only.
