@@ -104,10 +104,6 @@ var SliderWrapper = /** @class */ (function () {
     SliderWrapper.prototype.movePrev = function () {
         if (!this._animating) {
             this._animating = true;
-            if (this._slide.prev === this._slide.next) {
-                this._resetSlide(this._actors.next);
-                this._updateSlide('prev', this._actors.active + 1);
-            }
             this._actors.changeActors(Direction.Prev);
             this._wrapElem.classList.add(Classes.prev);
         }
@@ -118,7 +114,7 @@ var SliderWrapper = /** @class */ (function () {
     SliderWrapper.prototype.moveNext = function () {
         if (!this._animating) {
             this._animating = true;
-            this._updateSlide('next', this._actors.next);
+            this._actors.changeActors(Direction.Next);
             this._wrapElem.classList.add(Classes.next);
         }
     };

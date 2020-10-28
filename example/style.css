@@ -62,6 +62,10 @@ ul {
   line-height: 300px;
 }
 
+.slide:nth-child(2n) {
+  background-color: rgb(68, 68, 68);
+}
+
 .control {
   position: absolute;
   top: 40%;
