@@ -20,7 +20,7 @@ All the copyrights stays for AleCiotto and iDenisM.
 * **DONE**: ~~Actors class~~.
 * **DONE**: ~~Actors class test~~.
 ---
-* **TRIAGE**: *Base arrow movement (No loop).*
+* **DOING**: *Base arrow movement (No sloop).*
 ---
 * **TODO**: Test base arrow movement (No loop).
 * **TODO**: Implement loop.
