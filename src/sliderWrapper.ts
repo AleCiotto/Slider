@@ -72,7 +72,8 @@ export class SliderWrapper {
   private _updateSlides(actors: ICurrentActors) {
     this._updateSlide('active', actors.active);
     this._updateSlide('next', actors.next);
-    this._updateSlide('prev', actors.prev);
+    if (this._slides.length > 2)
+      this._updateSlide('prev', actors.prev);
   }
 
   private _resetSlide(slideId: number) {
@@ -82,6 +83,7 @@ export class SliderWrapper {
   }
 
   private _updateSlide(slideName: keyof ISlide, slideId: number) {
+    let slide = this._slide[slideName];
     if (!this._slide[slideName]) {
       this._slide[slideName] = this._slides[slideId]
     } else {
