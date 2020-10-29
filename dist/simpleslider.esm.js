@@ -105,6 +105,10 @@ var SliderWrapper = /** @class */ (function () {
         if (!this._animating) {
             this._animating = true;
             this._actors.changeActors(Direction.Prev);
+            if (this._slides.length === 2) {
+                this._slide.next.classList.remove(Classes.slides.next);
+                this._slide.next.classList.add(Classes.slides.prev);
+            }
             this._wrapElem.classList.add(Classes.prev);
         }
     };
@@ -127,7 +131,8 @@ var SliderWrapper = /** @class */ (function () {
     SliderWrapper.prototype._updateSlides = function (actors) {
         this._updateSlide('active', actors.active);
         this._updateSlide('next', actors.next);
-        this._updateSlide('prev', actors.prev);
+        if (this._slides.length > 2)
+            this._updateSlide('prev', actors.prev);
     };
     SliderWrapper.prototype._resetSlide = function (slideId) {
         this._slides[slideId].classList.remove(Classes.slides.active);
@@ -135,6 +140,7 @@ var SliderWrapper = /** @class */ (function () {
         this._slides[slideId].classList.remove(Classes.slides.next);
     };
     SliderWrapper.prototype._updateSlide = function (slideName, slideId) {
+        var slide = this._slide[slideName];
         if (!this._slide[slideName]) {
             this._slide[slideName] = this._slides[slideId];
         }
@@ -148,6 +154,33 @@ var SliderWrapper = /** @class */ (function () {
         slide.classList.remove(Classes.slides.active);
         slide.classList.remove(Classes.slides.prev);
         slide.classList.remove(Classes.slides.next);
+    };
+    /**
+     * Graphicaly move the slide in active position
+     * of the slider
+     */
+    SliderWrapper.prototype._becomeActive = function (slide) {
+        slide.classList.remove(Classes.slides.prev);
+        slide.classList.remove(Classes.slides.next);
+        slide.classList.add(Classes.slides.active);
+    };
+    /**
+     * Graphicaly move the slide a the beggining
+     * of the slider
+     */
+    SliderWrapper.prototype._becomeFirst = function (slide) {
+        slide.classList.remove(Classes.slides.active);
+        slide.classList.remove(Classes.slides.next);
+        slide.classList.add(Classes.slides.prev);
+    };
+    /**
+     * Graphicaly move the slide a the end
+     * of the slider
+     */
+    SliderWrapper.prototype._becomeLast = function (slide) {
+        slide.classList.remove(Classes.slides.active);
+        slide.classList.remove(Classes.slides.prev);
+        slide.classList.add(Classes.slides.next);
     };
     return SliderWrapper;
 }());
