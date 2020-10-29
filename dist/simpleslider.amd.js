@@ -89,6 +89,9 @@ define(['exports'], function (exports) { 'use strict';
     return Actors;
   }();
 
+  var classAdd = function (elem, className) {
+    if (elem) elem.classList.add(className);
+  };
   var classRemove = function (elem, className) {
     if (elem) elem.classList.remove(className);
   };
@@ -99,23 +102,25 @@ define(['exports'], function (exports) { 'use strict';
     function SliderWrapper(wrapperElement, options) {
       this._wrapElem = wrapperElement;
       this._options = options;
-      this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
+
+      var slides = this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
+
       var actors = {
         active: 0,
         next: 1,
-        prev: this._slides.length - 1
+        prev: slides.length - 1
       };
       this._actors = new Actors(actors);
       this._animating = false;
       this._slide = {
-        active: this._slides[actors.active],
-        prev: this._slides[actors.prev],
-        next: this._slides[actors.next]
+        active: slides[actors.active],
+        prev: slides[actors.prev],
+        next: slides[actors.next]
       };
 
       this._updateSlides(actors);
 
-      if (this._slides.length) {
+      if (slides.length) {
         this._eventsHandler();
       }
     }
@@ -124,7 +129,7 @@ define(['exports'], function (exports) { 'use strict';
       this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
     };
     /**
-     * movePrev
+     * @description Move the slider to previous position
      */
 
 
@@ -135,12 +140,11 @@ define(['exports'], function (exports) { 'use strict';
         this._actors.changeActors(Direction.Prev);
 
         if (this._slides.length === 2) this._becomePrev(this._slide.next);
-
-        this._wrapElem.classList.add(Classes.prev);
+        classAdd(this._wrapElem, Classes.prev);
       }
     };
     /**
-     * moveNext
+     * @description Move the slider to next position
      */
 
 
@@ -150,17 +154,15 @@ define(['exports'], function (exports) { 'use strict';
 
         this._actors.changeActors(Direction.Next);
 
-        this._wrapElem.classList.add(Classes.next);
+        classAdd(this._wrapElem, Classes.next);
       }
     };
 
     SliderWrapper.prototype._animationEnd = function () {
       this._updateSlides(this._actors);
 
-      this._wrapElem.classList.remove(Classes.prev);
-
-      this._wrapElem.classList.remove(Classes.next);
-
+      classRemove(this._wrapElem, Classes.prev);
+      classRemove(this._wrapElem, Classes.next);
       this._animating = false;
     };
 
@@ -174,24 +176,20 @@ define(['exports'], function (exports) { 'use strict';
       this._updateSlide(this._slide, actors);
     };
 
-    SliderWrapper.prototype._resetSlide = function (slideId) {
-      this._slides[slideId].classList.remove(Classes.slides.active);
-
-      this._slides[slideId].classList.remove(Classes.slides.prev);
-
-      this._slides[slideId].classList.remove(Classes.slides.next);
-    };
-
     SliderWrapper.prototype._updateSlide = function (slide, actors) {
       slide.active = this._slides[actors.active];
       slide.next = this._slides[actors.next];
       slide.prev = this._slides[actors.prev];
     };
+    /**
+     * @description Graphicaly move the slide in idle position away from the slider
+     */
 
-    SliderWrapper.prototype._clearSlideClasses = function (slide) {
-      slide.classList.remove(Classes.slides.active);
-      slide.classList.remove(Classes.slides.prev);
-      slide.classList.remove(Classes.slides.next);
+
+    SliderWrapper.prototype._becomeIdle = function (slide) {
+      classRemove(slide, Classes.slides.active);
+      classRemove(slide, Classes.slides.next);
+      classRemove(slide, Classes.slides.prev);
     };
     /**
      * @description Graphicaly move the slide in active position of the slider
@@ -199,9 +197,9 @@ define(['exports'], function (exports) { 'use strict';
 
 
     SliderWrapper.prototype._becomeActive = function (slide) {
-      slide.classList.remove(Classes.slides.prev);
-      slide.classList.remove(Classes.slides.next);
-      slide.classList.add(Classes.slides.active);
+      classRemove(slide, Classes.slides.prev);
+      classRemove(slide, Classes.slides.next);
+      classAdd(slide, Classes.slides.active);
     };
     /**
      * @description Graphicaly move the slide a the beggining of the slider
@@ -209,9 +207,9 @@ define(['exports'], function (exports) { 'use strict';
 
 
     SliderWrapper.prototype._becomePrev = function (slide) {
-      slide.classList.remove(Classes.slides.active);
-      slide.classList.remove(Classes.slides.next);
-      slide.classList.add(Classes.slides.prev);
+      classRemove(slide, Classes.slides.active);
+      classRemove(slide, Classes.slides.next);
+      classAdd(slide, Classes.slides.prev);
     };
     /**
      * @description Graphicaly move the slide a the end of the slider
@@ -221,7 +219,7 @@ define(['exports'], function (exports) { 'use strict';
     SliderWrapper.prototype._becomeNext = function (slide) {
       classRemove(slide, Classes.slides.active);
       classRemove(slide, Classes.slides.prev);
-      slide.classList.add(Classes.slides.next);
+      classAdd(slide, Classes.slides.next);
     };
 
     return SliderWrapper;
