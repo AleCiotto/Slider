@@ -73,13 +73,10 @@ export class SliderWrapper {
 
   private _updateSlides(actors: ICurrentActors) {
     this._becomeActive(this._slides[actors.active]);
-    this._updateSlide('active', actors.active);
     this._becomeNext(this._slides[actors.next]);
-    this._updateSlide('next', actors.next);
-    if (this._slides.length > 2) {
+    if (this._slides.length > 2)
       this._becomePrev(this._slides[actors.prev]);
-      this._updateSlide('prev', actors.prev);
-    }
+    this._updateSlide(this._slide, actors);
   }
 
   private _resetSlide(slideId: number) {
@@ -88,15 +85,10 @@ export class SliderWrapper {
     this._slides[slideId].classList.remove(Classes.slides.next);
   }
 
-  private _updateSlide(slideName: keyof ISlide, slideId: number) {
-    let slide = this._slide[slideName];
-    if (!this._slide[slideName]) {
-      this._slide[slideName] = this._slides[slideId]
-    } else {
-      this._slide[slideName].classList.remove(Classes.slides[slideName]);
-      this._slide[slideName] = this._slides[slideId];
-      this._slide[slideName].classList.add(Classes.slides[slideName]);
-    }
+  private _updateSlide(slide: ISlide, actors: ICurrentActors) {
+    slide.active = this._slides[actors.active];
+    slide.next = this._slides[actors.next];
+    slide.prev = this._slides[actors.prev];
   }
 
   private _clearSlideClasses(slide: HTMLElement) {

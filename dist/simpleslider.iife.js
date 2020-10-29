@@ -164,17 +164,11 @@ var SimpleSlider = (function (exports) {
     SliderWrapper.prototype._updateSlides = function (actors) {
       this._becomeActive(this._slides[actors.active]);
 
-      this._updateSlide('active', actors.active);
-
       this._becomeNext(this._slides[actors.next]);
 
-      this._updateSlide('next', actors.next);
+      if (this._slides.length > 2) this._becomePrev(this._slides[actors.prev]);
 
-      if (this._slides.length > 2) {
-        this._becomePrev(this._slides[actors.prev]);
-
-        this._updateSlide('prev', actors.prev);
-      }
+      this._updateSlide(this._slide, actors);
     };
 
     SliderWrapper.prototype._resetSlide = function (slideId) {
@@ -185,18 +179,10 @@ var SimpleSlider = (function (exports) {
       this._slides[slideId].classList.remove(Classes.slides.next);
     };
 
-    SliderWrapper.prototype._updateSlide = function (slideName, slideId) {
-      var slide = this._slide[slideName];
-
-      if (!this._slide[slideName]) {
-        this._slide[slideName] = this._slides[slideId];
-      } else {
-        this._slide[slideName].classList.remove(Classes.slides[slideName]);
-
-        this._slide[slideName] = this._slides[slideId];
-
-        this._slide[slideName].classList.add(Classes.slides[slideName]);
-      }
+    SliderWrapper.prototype._updateSlide = function (slide, actors) {
+      slide.active = this._slides[actors.active];
+      slide.next = this._slides[actors.next];
+      slide.prev = this._slides[actors.prev];
     };
 
     SliderWrapper.prototype._clearSlideClasses = function (slide) {
