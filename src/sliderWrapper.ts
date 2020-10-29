@@ -47,10 +47,8 @@ export class SliderWrapper {
     if (!this._animating) {
       this._animating = true;
       this._actors.changeActors(Direction.Prev);
-      if (this._slides.length === 2) {
-        this._slide.next.classList.remove(Classes.slides.next);
-        this._slide.next.classList.add(Classes.slides.prev);
-      }
+      if (this._slides.length === 2)
+        this._becomePrev(this._slide.next);
       this._wrapElem.classList.add(Classes.prev);
     }
   }
@@ -74,10 +72,14 @@ export class SliderWrapper {
   }
 
   private _updateSlides(actors: ICurrentActors) {
+    this._becomeActive(this._slides[actors.active]);
     this._updateSlide('active', actors.active);
+    this._becomeNext(this._slides[actors.next]);
     this._updateSlide('next', actors.next);
-    if (this._slides.length > 2)
+    if (this._slides.length > 2) {
+      this._becomePrev(this._slides[actors.prev]);
       this._updateSlide('prev', actors.prev);
+    }
   }
 
   private _resetSlide(slideId: number) {
@@ -104,8 +106,7 @@ export class SliderWrapper {
   }
 
   /**
-   * Graphicaly move the slide in active position
-   * of the slider
+   * @description Graphicaly move the slide in active position of the slider
    */
   private _becomeActive(slide: HTMLElement) {
     slide.classList.remove(Classes.slides.prev);
@@ -114,20 +115,18 @@ export class SliderWrapper {
   }
 
   /**
-   * Graphicaly move the slide a the beggining
-   * of the slider
+   * @description Graphicaly move the slide a the beggining of the slider
    */
-  private _becomeFirst(slide: HTMLElement) {
+  private _becomePrev(slide: HTMLElement) {
     slide.classList.remove(Classes.slides.active);
     slide.classList.remove(Classes.slides.next);
     slide.classList.add(Classes.slides.prev);
   }
 
   /**
-   * Graphicaly move the slide a the end
-   * of the slider
+   * @description Graphicaly move the slide a the end of the slider
    */
-  private _becomeLast(slide: HTMLElement) {
+  private _becomeNext(slide: HTMLElement) {
     slide.classList.remove(Classes.slides.active);
     slide.classList.remove(Classes.slides.prev);
     slide.classList.add(Classes.slides.next);

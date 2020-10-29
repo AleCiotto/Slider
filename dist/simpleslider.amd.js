@@ -130,11 +130,7 @@ define(['exports'], function (exports) { 'use strict';
 
         this._actors.changeActors(Direction.Prev);
 
-        if (this._slides.length === 2) {
-          this._slide.next.classList.remove(Classes.slides.next);
-
-          this._slide.next.classList.add(Classes.slides.prev);
-        }
+        if (this._slides.length === 2) this._becomePrev(this._slide.next);
 
         this._wrapElem.classList.add(Classes.prev);
       }
@@ -165,11 +161,19 @@ define(['exports'], function (exports) { 'use strict';
     };
 
     SliderWrapper.prototype._updateSlides = function (actors) {
+      this._becomeActive(this._slides[actors.active]);
+
       this._updateSlide('active', actors.active);
+
+      this._becomeNext(this._slides[actors.next]);
 
       this._updateSlide('next', actors.next);
 
-      if (this._slides.length > 2) this._updateSlide('prev', actors.prev);
+      if (this._slides.length > 2) {
+        this._becomePrev(this._slides[actors.prev]);
+
+        this._updateSlide('prev', actors.prev);
+      }
     };
 
     SliderWrapper.prototype._resetSlide = function (slideId) {
@@ -200,8 +204,7 @@ define(['exports'], function (exports) { 'use strict';
       slide.classList.remove(Classes.slides.next);
     };
     /**
-     * Graphicaly move the slide in active position
-     * of the slider
+     * @description Graphicaly move the slide in active position of the slider
      */
 
 
@@ -211,23 +214,21 @@ define(['exports'], function (exports) { 'use strict';
       slide.classList.add(Classes.slides.active);
     };
     /**
-     * Graphicaly move the slide a the beggining
-     * of the slider
+     * @description Graphicaly move the slide a the beggining of the slider
      */
 
 
-    SliderWrapper.prototype._becomeFirst = function (slide) {
+    SliderWrapper.prototype._becomePrev = function (slide) {
       slide.classList.remove(Classes.slides.active);
       slide.classList.remove(Classes.slides.next);
       slide.classList.add(Classes.slides.prev);
     };
     /**
-     * Graphicaly move the slide a the end
-     * of the slider
+     * @description Graphicaly move the slide a the end of the slider
      */
 
 
-    SliderWrapper.prototype._becomeLast = function (slide) {
+    SliderWrapper.prototype._becomeNext = function (slide) {
       slide.classList.remove(Classes.slides.active);
       slide.classList.remove(Classes.slides.prev);
       slide.classList.add(Classes.slides.next);
