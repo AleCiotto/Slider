@@ -73,6 +73,11 @@ var Actors = /** @class */ (function () {
     return Actors;
 }());
 
+var classRemove = function (elem, className) {
+    if (elem)
+        elem.classList.remove(className);
+};
+
 var SliderWrapper = /** @class */ (function () {
     function SliderWrapper(wrapperElement, options) {
         this._wrapElem = wrapperElement;
@@ -168,8 +173,8 @@ var SliderWrapper = /** @class */ (function () {
      * @description Graphicaly move the slide a the end of the slider
      */
     SliderWrapper.prototype._becomeNext = function (slide) {
-        slide.classList.remove(Classes.slides.active);
-        slide.classList.remove(Classes.slides.prev);
+        classRemove(slide, Classes.slides.active);
+        classRemove(slide, Classes.slides.prev);
         slide.classList.add(Classes.slides.next);
     };
     return SliderWrapper;

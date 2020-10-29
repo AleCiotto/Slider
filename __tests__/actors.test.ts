@@ -1,7 +1,7 @@
 import { Actors } from "../src/actors";
 import { 
   Direction,
-  ICurrentActors } from "../src/defaults";
+  ICurrentActors } from "../src/utils/defaults";
 
 const firstSlide: number = 0;
 const slidesQuantity: number = 5;

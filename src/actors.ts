@@ -1,6 +1,6 @@
 import { 
   Direction,
-  ICurrentActors } from "./defaults";
+  ICurrentActors } from "./utils/defaults";
 
 /**
  * @description The index of active, prev and next slider

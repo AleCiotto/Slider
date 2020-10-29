@@ -1,10 +1,11 @@
-import { Classes } from "./constants";
+import { Classes } from "./utils/constants";
 import { 
   IOptions,
   ICurrentActors,
   ISlide, 
-  Direction} from "./defaults";
+  Direction} from "./utils/defaults";
 import { Actors } from './actors';
+import { classAdd , classRemove } from "./utils/shortcuts";
 
 export class SliderWrapper {
   private _wrapElem: HTMLElement;
@@ -17,21 +18,21 @@ export class SliderWrapper {
   constructor(wrapperElement: HTMLElement, options: IOptions) {
     this._wrapElem = wrapperElement;
     this._options = options;
-    this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
+    let slides = this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
     let actors = {
       active: 0,
       next: 1,
-      prev: this._slides.length - 1
+      prev: slides.length - 1
     }
     this._actors = new Actors(actors);
     this._animating = false;
     this._slide = {
-      active: this._slides[actors.active],
-      prev: this._slides[actors.prev],
-      next: this._slides[actors.next]
+      active: slides[actors.active],
+      prev: slides[actors.prev],
+      next: slides[actors.next]
     }
     this._updateSlides(actors);
-    if (this._slides.length) {
+    if (slides.length) {
       this._eventsHandler();
     }
   }
@@ -41,7 +42,7 @@ export class SliderWrapper {
   }
 
   /**
-   * movePrev
+   * @description Move the slider to previous position
    */
   public movePrev() {
     if (!this._animating) {
@@ -49,25 +50,25 @@ export class SliderWrapper {
       this._actors.changeActors(Direction.Prev);
       if (this._slides.length === 2)
         this._becomePrev(this._slide.next);
-      this._wrapElem.classList.add(Classes.prev);
+      classAdd(this._wrapElem, Classes.prev);
     }
   }
   
   /**
-   * moveNext
+   * @description Move the slider to next position
    */
   public moveNext() {
     if (!this._animating) {
       this._animating = true;
       this._actors.changeActors(Direction.Next);
-      this._wrapElem.classList.add(Classes.next);
+      classAdd(this._wrapElem, Classes.next);
     }
   }
 
   private _animationEnd() {
     this._updateSlides(this._actors);
-    this._wrapElem.classList.remove(Classes.prev);
-    this._wrapElem.classList.remove(Classes.next);
+    classRemove(this._wrapElem, Classes.prev);
+    classRemove(this._wrapElem, Classes.next);
     this._animating = false;
   }
 
@@ -79,48 +80,45 @@ export class SliderWrapper {
     this._updateSlide(this._slide, actors);
   }
 
-  private _resetSlide(slideId: number) {
-    this._slides[slideId].classList.remove(Classes.slides.active);
-    this._slides[slideId].classList.remove(Classes.slides.prev);
-    this._slides[slideId].classList.remove(Classes.slides.next);
-  }
-
   private _updateSlide(slide: ISlide, actors: ICurrentActors) {
     slide.active = this._slides[actors.active];
     slide.next = this._slides[actors.next];
     slide.prev = this._slides[actors.prev];
   }
 
-  private _clearSlideClasses(slide: HTMLElement) {
-    slide.classList.remove(Classes.slides.active);
-    slide.classList.remove(Classes.slides.prev);
-    slide.classList.remove(Classes.slides.next);
+  /**
+   * @description Graphicaly move the slide in idle position away from the slider
+   */
+  private _becomeIdle(slide: HTMLElement) {
+    classRemove(slide, Classes.slides.active);
+    classRemove(slide, Classes.slides.next);
+    classRemove(slide, Classes.slides.prev);
   }
 
   /**
    * @description Graphicaly move the slide in active position of the slider
    */
   private _becomeActive(slide: HTMLElement) {
-    slide.classList.remove(Classes.slides.prev);
-    slide.classList.remove(Classes.slides.next);
-    slide.classList.add(Classes.slides.active);
+    classRemove(slide, Classes.slides.prev);
+    classRemove(slide, Classes.slides.next);
+    classAdd(slide, Classes.slides.active);
   }
 
   /**
    * @description Graphicaly move the slide a the beggining of the slider
    */
   private _becomePrev(slide: HTMLElement) {
-    slide.classList.remove(Classes.slides.active);
-    slide.classList.remove(Classes.slides.next);
-    slide.classList.add(Classes.slides.prev);
+    classRemove(slide, Classes.slides.active);
+    classRemove(slide, Classes.slides.next);
+    classAdd(slide, Classes.slides.prev);
   }
 
   /**
    * @description Graphicaly move the slide a the end of the slider
    */
   private _becomeNext(slide: HTMLElement) {
-    slide.classList.remove(Classes.slides.active);
-    slide.classList.remove(Classes.slides.prev);
-    slide.classList.add(Classes.slides.next);
+    classRemove(slide, Classes.slides.active);
+    classRemove(slide, Classes.slides.prev);
+    classAdd(slide, Classes.slides.next);
   }
 }

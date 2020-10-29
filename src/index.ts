@@ -1,4 +1,4 @@
-import { Options, IOptions } from "./defaults";
+import { Options, IOptions } from "./utils/defaults";
 import { SliderWrapper } from "./sliderWrapper";
 
 export class Slider {

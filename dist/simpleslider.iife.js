@@ -90,6 +90,10 @@ var SimpleSlider = (function (exports) {
     return Actors;
   }();
 
+  var classRemove = function (elem, className) {
+    if (elem) elem.classList.remove(className);
+  };
+
   var SliderWrapper =
   /** @class */
   function () {
@@ -216,8 +220,8 @@ var SimpleSlider = (function (exports) {
 
 
     SliderWrapper.prototype._becomeNext = function (slide) {
-      slide.classList.remove(Classes.slides.active);
-      slide.classList.remove(Classes.slides.prev);
+      classRemove(slide, Classes.slides.active);
+      classRemove(slide, Classes.slides.prev);
       slide.classList.add(Classes.slides.next);
     };
 
