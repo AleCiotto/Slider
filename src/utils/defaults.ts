@@ -37,6 +37,7 @@ export const Options: IOptions = {
  * @description Direction where to move the slider
  */
 export enum Direction {
+  Idle,
   Prev,
   Next
 }

@@ -14,6 +14,7 @@ export class SliderWrapper {
   private _actors: Actors;
   private _slide: ISlide;
   private _animating: boolean;
+  private _direction: Direction;
 
   constructor(wrapperElement: HTMLElement, options: IOptions) {
     this._wrapElem = wrapperElement;
@@ -24,6 +25,7 @@ export class SliderWrapper {
       next: 1,
       prev: slides.length - 1
     }
+    this._direction = Direction.Idle;
     this._actors = new Actors(actors);
     this._animating = false;
     this._slide = {
@@ -42,30 +44,28 @@ export class SliderWrapper {
   }
 
   /**
-   * @description Move the slider to previous position
+   * @description Get the slider moved direction
    */
-  public movePrev() {
-    if (!this._animating) {
-      this._animating = true;
-      this._actors.changeActors(Direction.Prev);
-      if (this._slides.length === 2)
-        this._becomePrev(this._slide.next);
-      classAdd(this._wrapElem, Classes.prev);
-    }
+  get movedTo() {
+    return this._direction;
   }
-  
+
   /**
-   * @description Move the slider to next position
+   * @description Sets where the slider moved to
    */
-  public moveNext() {
+  set movedTo(direction: Direction) {
     if (!this._animating) {
       this._animating = true;
-      this._actors.changeActors(Direction.Next);
-      classAdd(this._wrapElem, Classes.next);
+      this._direction = direction;
+      let isPrev = direction === Direction.Prev;
+      if (isPrev && this._slides.length === 2)
+        this._becomePrev(this._slide.next);
+      classAdd(this._wrapElem, isPrev ? Classes.prev : Classes.next);
     }
   }
 
   private _animationEnd() {
+    this._actors.changeActors(Direction.Next);
     this._updateSlides(this._actors);
     classRemove(this._wrapElem, Classes.prev);
     classRemove(this._wrapElem, Classes.next);
@@ -77,10 +77,10 @@ export class SliderWrapper {
     this._becomeNext(this._slides[actors.next]);
     if (this._slides.length > 2)
       this._becomePrev(this._slides[actors.prev]);
-    this._updateSlide(this._slide, actors);
+    this._updateSlideState(this._slide, actors);
   }
 
-  private _updateSlide(slide: ISlide, actors: ICurrentActors) {
+  private _updateSlideState(slide: ISlide, actors: ICurrentActors) {
     slide.active = this._slides[actors.active];
     slide.next = this._slides[actors.next];
     slide.prev = this._slides[actors.prev];

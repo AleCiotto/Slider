@@ -1,5 +1,6 @@
-import { Options, IOptions } from "./defaults";
+import { Options, IOptions } from "./utils/defaults";
 import { SliderWrapper } from "./sliderWrapper";
+import { Direction } from './utils/defaults';
 
 export class Slider {
   private _sliderElement?: HTMLElement;
@@ -24,25 +25,16 @@ export class Slider {
   }
 
   _init() {
-    if (this._prevBtn) this._prevBtn.addEventListener('click', this.movePrev.bind(this), false);
-    if (this._nextBtn) this._nextBtn.addEventListener('click', this.moveNext.bind(this), false);
+    if (this._prevBtn) this._prevBtn.addEventListener('click', this.move.bind(this, Direction.Prev), false);
+    if (this._nextBtn) this._nextBtn.addEventListener('click', this.move.bind(this, Direction.Next), false);
   }
 
   /**
-   * moveNext
+   * @description make a single move
    */
-  public moveNext() {
+  public move(direction: Direction) {
     if (this._wrapper) {
-      this._wrapper.moveNext();
-    }
-  }
-
-  /**
-   * movePrev
-   */
-  public movePrev() {
-    if (this._wrapper) {
-      this._wrapper.movePrev();
+      this._wrapper.movedTo = direction;
     }
   }
 }

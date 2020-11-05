@@ -35,8 +35,9 @@ var SimpleSlider = (function (exports) {
   var Direction;
 
   (function (Direction) {
-    Direction[Direction["Prev"] = 0] = "Prev";
-    Direction[Direction["Next"] = 1] = "Next";
+    Direction[Direction["Idle"] = 0] = "Idle";
+    Direction[Direction["Prev"] = 1] = "Prev";
+    Direction[Direction["Next"] = 2] = "Next";
   })(Direction || (Direction = {}));
 
   // in worker
@@ -111,6 +112,7 @@ var SimpleSlider = (function (exports) {
         next: 1,
         prev: slides.length - 1
       };
+      this._direction = Direction.Idle;
       this._actors = new Actors(actors);
       this._animating = false;
       this._slide = {
@@ -129,37 +131,34 @@ var SimpleSlider = (function (exports) {
     SliderWrapper.prototype._eventsHandler = function () {
       this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
     };
-    /**
-     * @description Move the slider to previous position
-     */
 
+    Object.defineProperty(SliderWrapper.prototype, "movedTo", {
+      /**
+       * @description Get the slider moved direction
+       */
+      get: function () {
+        return this._direction;
+      },
 
-    SliderWrapper.prototype.movePrev = function () {
-      if (!this._animating) {
-        this._animating = true;
-
-        this._actors.changeActors(Direction.Prev);
-
-        if (this._slides.length === 2) this._becomePrev(this._slide.next);
-        classAdd(this._wrapElem, Classes.prev);
-      }
-    };
-    /**
-     * @description Move the slider to next position
-     */
-
-
-    SliderWrapper.prototype.moveNext = function () {
-      if (!this._animating) {
-        this._animating = true;
-
-        this._actors.changeActors(Direction.Next);
-
-        classAdd(this._wrapElem, Classes.next);
-      }
-    };
+      /**
+       * @description Sets where the slider moved to
+       */
+      set: function (direction) {
+        if (!this._animating) {
+          this._animating = true;
+          this._direction = direction;
+          var isPrev = direction === Direction.Prev;
+          if (isPrev && this._slides.length === 2) this._becomePrev(this._slide.next);
+          classAdd(this._wrapElem, isPrev ? Classes.prev : Classes.next);
+        }
+      },
+      enumerable: false,
+      configurable: true
+    });
 
     SliderWrapper.prototype._animationEnd = function () {
+      this._actors.changeActors(Direction.Next);
+
       this._updateSlides(this._actors);
 
       classRemove(this._wrapElem, Classes.prev);
@@ -174,10 +173,10 @@ var SimpleSlider = (function (exports) {
 
       if (this._slides.length > 2) this._becomePrev(this._slides[actors.prev]);
 
-      this._updateSlide(this._slide, actors);
+      this._updateSlideState(this._slide, actors);
     };
 
-    SliderWrapper.prototype._updateSlide = function (slide, actors) {
+    SliderWrapper.prototype._updateSlideState = function (slide, actors) {
       slide.active = this._slides[actors.active];
       slide.next = this._slides[actors.next];
       slide.prev = this._slides[actors.prev];
@@ -246,27 +245,17 @@ var SimpleSlider = (function (exports) {
     }
 
     Slider.prototype._init = function () {
-      if (this._prevBtn) this._prevBtn.addEventListener('click', this.movePrev.bind(this), false);
-      if (this._nextBtn) this._nextBtn.addEventListener('click', this.moveNext.bind(this), false);
+      if (this._prevBtn) this._prevBtn.addEventListener('click', this.move.bind(this, Direction.Prev), false);
+      if (this._nextBtn) this._nextBtn.addEventListener('click', this.move.bind(this, Direction.Next), false);
     };
     /**
-     * moveNext
+     * @description make a single move
      */
 
 
-    Slider.prototype.moveNext = function () {
+    Slider.prototype.move = function (direction) {
       if (this._wrapper) {
-        this._wrapper.moveNext();
-      }
-    };
-    /**
-     * movePrev
-     */
-
-
-    Slider.prototype.movePrev = function () {
-      if (this._wrapper) {
-        this._wrapper.movePrev();
+        this._wrapper.movedTo = direction;
       }
     };
 
