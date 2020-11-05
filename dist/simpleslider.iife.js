@@ -84,7 +84,7 @@ var SimpleSlider = (function (exports) {
       this._changeActors = changeActors;
     }
 
-    Actors.prototype.changeActors = function (direction) {
+    Actors.prototype.change = function (direction) {
       return this._changeActors(direction);
     };
 
@@ -107,21 +107,21 @@ var SimpleSlider = (function (exports) {
 
       var slides = this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
 
-      var actors = {
+      this._slidesIndex = {
         active: 0,
         next: 1,
         prev: slides.length - 1
       };
       this._direction = Direction.Idle;
-      this._actors = new Actors(actors);
+      this._actors = new Actors(this._slidesIndex);
       this._animating = false;
       this._slide = {
-        active: slides[actors.active],
-        prev: slides[actors.prev],
-        next: slides[actors.next]
+        active: slides[this._slidesIndex.active],
+        prev: slides[this._slidesIndex.prev],
+        next: slides[this._slidesIndex.next]
       };
 
-      this._updateSlides(actors);
+      this._updateSlides(this._slidesIndex);
 
       if (slides.length) {
         this._eventsHandler();
@@ -157,9 +157,9 @@ var SimpleSlider = (function (exports) {
     });
 
     SliderWrapper.prototype._animationEnd = function () {
-      this._actors.changeActors(Direction.Next);
+      var toIdle = this._actors.change(Direction.Next);
 
-      this._updateSlides(this._actors);
+      this._updateSlides(this._slidesIndex);
 
       classRemove(this._wrapElem, Classes.prev);
       classRemove(this._wrapElem, Classes.next);

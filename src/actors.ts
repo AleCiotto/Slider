@@ -51,7 +51,7 @@ export class Actors {
     this._changeActors = changeActors;
   }
 
-  changeActors(direction: Direction): ICurrentActors {
+  change(direction: Direction): ICurrentActors {
     return this._changeActors(direction);
   }
 }
