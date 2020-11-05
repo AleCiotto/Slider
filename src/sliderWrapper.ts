@@ -80,14 +80,12 @@ export class SliderWrapper {
     
     this._slideList = tempSlideList;
 
-    this._becomeIdle(idleList);
-    this._becomeActive(this._slides[actors.active]);
-    this._becomeNext(this._slides[actors.next]);
+    this._updateSlidesClasses(idleList);
+    this._updateSlidesClasses(activeList, Classes.slides.active);
+    this._updateSlidesClasses(nextList, Classes.slides.next);
     if (this._slides.length > 2)
-      this._becomePrev(this._slides[actors.prev]);
+      this._updateSlidesClasses(prevList, Classes.slides.prev);
     
-
-    // this._updateSlides(this._slidesIndex);
     classRemove(this._wrapElem, Classes.prev);
     classRemove(this._wrapElem, Classes.next);
     this._animating = false;
@@ -110,11 +108,13 @@ export class SliderWrapper {
   /**
    * @description Graphicaly move the slide in idle position away from the slider
    */
-  private _becomeIdle(slides: HTMLElement[]) {
+  private _updateSlidesClasses(slides: HTMLElement[], className: string = '') {
     for (const slide of slides) {
       classRemove(slide, Classes.slides.active);
       classRemove(slide, Classes.slides.next);
       classRemove(slide, Classes.slides.prev);
+      if (className)
+        classAdd(slide, className);
     }
   }
 

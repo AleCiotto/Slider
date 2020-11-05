@@ -42,6 +42,13 @@ export enum Direction {
   Next
 }
 
+export enum SlideState {
+  Idle,
+  Active,
+  Next,
+  Prev
+}
+
 export interface ICurrentActors {
   active: number,
   prev: number,
