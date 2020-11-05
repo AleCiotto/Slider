@@ -1,4 +1,4 @@
-import { Options, IOptions } from "./utils/defaults";
+import { Options, IOptions } from "./defaults";
 import { SliderWrapper } from "./sliderWrapper";
 
 export class Slider {
@@ -8,7 +8,6 @@ export class Slider {
   private _options: IOptions;
   private _prevBtn?: HTMLElement;
   private _nextBtn?: HTMLElement;
-
 
   constructor(selector?: string | HTMLElement, options?: IOptions) {
     this._options = options != null ? Object.assign(Options, options) : Options;

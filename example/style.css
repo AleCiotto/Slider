@@ -94,8 +94,12 @@ ul {
 }
 
 .control_next {
-  right: 0;
+  right: 1px;
   border-radius: 2px 0 0 2px;
+}
+
+.control_next img {
+  transform: rotate(180deg);
 }
 
 .slider_option {
