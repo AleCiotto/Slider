@@ -3,8 +3,7 @@ import {
   IOptions,
   ICurrentActors,
   ISlide, 
-  Direction,
-  SlideState } from "./utils/defaults";
+  Direction } from "./utils/defaults";
 import { Actors } from './actors';
 import { classAdd , classRemove } from "./utils/shortcuts";
 
@@ -65,7 +64,7 @@ export class SliderWrapper {
       this._direction = direction;
       let isPrev = direction === Direction.Prev;
       if (isPrev && this._slides.length === 2)
-        this._becomePrev(this._slideList.next);
+      this._updateSlidesClasses(prevList, Classes.slides.prev);
       classAdd(this._wrapElem, isPrev ? Classes.prev : Classes.next);
     }
   }
@@ -86,8 +85,7 @@ export class SliderWrapper {
     if (this._slides.length > 2)
       this._updateSlidesClasses(prevList, Classes.slides.prev);
     
-    classRemove(this._wrapElem, Classes.prev);
-    classRemove(this._wrapElem, Classes.next);
+    classRemove(this._wrapElem, this.movedTo === Direction.Prev ? Classes.prev : Classes.next);
     this._animating = false;
   }
 
@@ -106,7 +104,7 @@ export class SliderWrapper {
   }
 
   /**
-   * @description Graphicaly move the slide in idle position away from the slider
+   * @description Graphicaly move the slide in idle/active/next/prev position
    */
   private _updateSlidesClasses(slides: HTMLElement[], className: string = '') {
     for (const slide of slides) {
@@ -116,32 +114,5 @@ export class SliderWrapper {
       if (className)
         classAdd(slide, className);
     }
-  }
-
-  /**
-   * @description Graphicaly move the slide in active position of the slider
-   */
-  private _becomeActive(slide: HTMLElement) {
-    classRemove(slide, Classes.slides.prev);
-    classRemove(slide, Classes.slides.next);
-    classAdd(slide, Classes.slides.active);
-  }
-
-  /**
-   * @description Graphicaly move the slide a the beggining of the slider
-   */
-  private _becomePrev(slide: HTMLElement) {
-    classRemove(slide, Classes.slides.active);
-    classRemove(slide, Classes.slides.next);
-    classAdd(slide, Classes.slides.prev);
-  }
-
-  /**
-   * @description Graphicaly move the slide a the end of the slider
-   */
-  private _becomeNext(slide: HTMLElement) {
-    classRemove(slide, Classes.slides.active);
-    classRemove(slide, Classes.slides.prev);
-    classAdd(slide, Classes.slides.next);
   }
 }
