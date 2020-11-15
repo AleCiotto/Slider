@@ -25,12 +25,12 @@ export class SliderWrapper {
       active: [0],
       next: [1],
       prev: [slides.length - 1]
-    }
+    };
     this._direction = Direction.Idle;
-    this._actors = new Actors(this._slidesIndex);
+    this._actors = new Actors(this._slidesIndex, slides.length - 1);
     this._animating = false;
     this._slideList = this._createSlideList(this._slidesIndex);
-    this._updateSlides(this._slidesIndex);
+    this._updateAllSlidesClasses();
     if (slides.length) {
       this._eventsHandler();
     }
@@ -62,45 +62,34 @@ export class SliderWrapper {
     if (!this._animating) {
       this._animating = true;
       this._direction = direction;
-      let isPrev = direction === Direction.Prev;
-      if (isPrev && this._slides.length === 2)
-      this._updateSlidesClasses(prevList, Classes.slides.prev);
-      classAdd(this._wrapElem, isPrev ? Classes.prev : Classes.next);
+      if (direction === Direction.Prev && this._slides.length === 2)
+        this._updateSlidesClasses(this._slideList.prev, Classes.slides.prev);
+      classAdd(this._wrapElem, direction === Direction.Prev ? Classes.prev : Classes.next);
     }
   }
 
   private _animationEnd() {
     this._actors.change(this.movedTo);
     
-    let slideList = this._slideList;
-    let tempSlideList = this._createSlideList(this._actors);
-    let tempSlideListArr = [tempSlideList.active, tempSlideList.next, tempSlideList.prev];
-    let idleList = [slideList.active, slideList.next, slideList.prev].filter(s => tempSlideListArr.indexOf(s) === -1)
-    
-    this._slideList = tempSlideList;
-
-    this._updateSlidesClasses(idleList);
-    this._updateSlidesClasses(activeList, Classes.slides.active);
-    this._updateSlidesClasses(nextList, Classes.slides.next);
-    if (this._slides.length > 2)
-      this._updateSlidesClasses(prevList, Classes.slides.prev);
+    this._updateAllSlidesClasses();
     
     classRemove(this._wrapElem, this.movedTo === Direction.Prev ? Classes.prev : Classes.next);
     this._animating = false;
   }
 
-  // private _updateSlides(actors: ICurrentActors) {
-  //   this._becomeActive(this._slides[actors.active]);
-  //   this._becomeNext(this._slides[actors.next]);
-  //   if (this._slides.length > 2)
-  //     this._becomePrev(this._slides[actors.prev]);
-  //   this._updateSlideState(this._slideList, actors);
-  // }
+  private _updateAllSlidesClasses() {
+    let slideList = this._slideList;
+    let tempSlideList = this._createSlideList(this._actors);
+    let tempSlideListArr = [...tempSlideList.active, ...tempSlideList.next, ...tempSlideList.prev];
+    let idleList = [...slideList.active, ...slideList.next, ...slideList.prev].filter(s => tempSlideListArr.indexOf(s) === -1);
 
-  private _updateSlideState(slide: ISlide, actors: ICurrentActors) {
-    slide.active = this._slides[actors.active];
-    slide.next = this._slides[actors.next];
-    slide.prev = this._slides[actors.prev];
+    this._slideList = tempSlideList;
+
+    this._updateSlidesClasses(idleList);
+    this._updateSlidesClasses(tempSlideList.active, Classes.slides.active);
+    this._updateSlidesClasses(tempSlideList.next, Classes.slides.next);
+    if (this._slides.length > 2)
+      this._updateSlidesClasses(tempSlideList.prev, Classes.slides.prev);
   }
 
   /**

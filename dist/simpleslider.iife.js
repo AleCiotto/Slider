@@ -40,6 +40,65 @@ var SimpleSlider = (function (exports) {
     Direction[Direction["Next"] = 2] = "Next";
   })(Direction || (Direction = {}));
 
+  var SlideState;
+
+  (function (SlideState) {
+    SlideState[SlideState["Idle"] = 0] = "Idle";
+    SlideState[SlideState["Active"] = 1] = "Active";
+    SlideState[SlideState["Next"] = 2] = "Next";
+    SlideState[SlideState["Prev"] = 3] = "Prev";
+  })(SlideState || (SlideState = {}));
+
+  /*! *****************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+
+  function __values(o) {
+      var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+      if (m) return m.call(o);
+      if (o && typeof o.length === "number") return {
+          next: function () {
+              if (o && i >= o.length) o = void 0;
+              return { value: o && o[i++], done: !o };
+          }
+      };
+      throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  }
+
+  function __read(o, n) {
+      var m = typeof Symbol === "function" && o[Symbol.iterator];
+      if (!m) return o;
+      var i = m.call(o), r, ar = [], e;
+      try {
+          while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+      }
+      catch (error) { e = { error: error }; }
+      finally {
+          try {
+              if (r && !r.done && (m = i["return"])) m.call(i);
+          }
+          finally { if (e) throw e.error; }
+      }
+      return ar;
+  }
+
+  function __spread() {
+      for (var ar = [], i = 0; i < arguments.length; i++)
+          ar = ar.concat(__read(arguments[i]));
+      return ar;
+  }
+
   // in worker
 
   /**
@@ -49,26 +108,37 @@ var SimpleSlider = (function (exports) {
   var Actors =
   /** @class */
   function () {
-    function Actors(props) {
+    function Actors(props, length) {
       var _this = this;
 
-      this.active = 0;
-      this.prev = 0;
-      this.next = 0;
+      this.active = [];
+      this.prev = [];
+      this.next = [];
       var active = props.active;
       var prev = props.prev;
       var next = props.next;
-      var slideLength = props.prev;
 
       var changeActors = function (direction) {
         if (direction === Direction.Next) {
-          active = active != slideLength ? ++active : 0;
-          prev = prev != slideLength ? ++prev : 0;
-          next = next != slideLength ? ++next : 0;
+          active = active.map(function (i) {
+            return i != length ? ++i : 0;
+          });
+          prev = prev.map(function (i) {
+            return i != length ? ++i : 0;
+          });
+          next = next.map(function (i) {
+            return i != length ? ++i : 0;
+          });
         } else {
-          active = active ? --active : slideLength;
-          prev = prev ? --prev : slideLength;
-          next = next ? --next : slideLength;
+          active = active.map(function (i) {
+            return i ? --i : length;
+          });
+          prev = prev.map(function (i) {
+            return i ? --i : length;
+          });
+          next = next.map(function (i) {
+            return i ? --i : length;
+          });
         }
 
         _this.active = active;
@@ -108,25 +178,37 @@ var SimpleSlider = (function (exports) {
       var slides = this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
 
       this._slidesIndex = {
-        active: 0,
-        next: 1,
-        prev: slides.length - 1
+        active: [0],
+        next: [1],
+        prev: [slides.length - 1]
       };
       this._direction = Direction.Idle;
-      this._actors = new Actors(this._slidesIndex);
+      this._actors = new Actors(this._slidesIndex, slides.length - 1);
       this._animating = false;
-      this._slide = {
-        active: slides[this._slidesIndex.active],
-        prev: slides[this._slidesIndex.prev],
-        next: slides[this._slidesIndex.next]
-      };
+      this._slideList = this._createSlideList(this._slidesIndex);
 
-      this._updateSlides(this._slidesIndex);
+      this._updateAllSlidesClasses();
 
       if (slides.length) {
         this._eventsHandler();
       }
     }
+
+    SliderWrapper.prototype._createSlideList = function (slidesIndex) {
+      var _this = this;
+
+      return {
+        active: slidesIndex.active.map(function (s) {
+          return _this._slides[s];
+        }),
+        prev: slidesIndex.prev.map(function (s) {
+          return _this._slides[s];
+        }),
+        next: slidesIndex.next.map(function (s) {
+          return _this._slides[s];
+        })
+      };
+    };
 
     SliderWrapper.prototype._eventsHandler = function () {
       this._wrapElem.addEventListener('transitionend', this._animationEnd.bind(this), false);
@@ -147,9 +229,8 @@ var SimpleSlider = (function (exports) {
         if (!this._animating) {
           this._animating = true;
           this._direction = direction;
-          var isPrev = direction === Direction.Prev;
-          if (isPrev && this._slides.length === 2) this._becomePrev(this._slide.next);
-          classAdd(this._wrapElem, isPrev ? Classes.prev : Classes.next);
+          if (direction === Direction.Prev && this._slides.length === 2) this._updateSlidesClasses(this._slideList.prev, Classes.slides.prev);
+          classAdd(this._wrapElem, direction === Direction.Prev ? Classes.prev : Classes.next);
         }
       },
       enumerable: false,
@@ -157,69 +238,66 @@ var SimpleSlider = (function (exports) {
     });
 
     SliderWrapper.prototype._animationEnd = function () {
-      var toIdle = this._actors.change(Direction.Next);
+      this._actors.change(this.movedTo);
 
-      this._updateSlides(this._slidesIndex);
+      this._updateAllSlidesClasses();
 
-      classRemove(this._wrapElem, Classes.prev);
-      classRemove(this._wrapElem, Classes.next);
+      classRemove(this._wrapElem, this.movedTo === Direction.Prev ? Classes.prev : Classes.next);
       this._animating = false;
     };
 
-    SliderWrapper.prototype._updateSlides = function (actors) {
-      this._becomeActive(this._slides[actors.active]);
+    SliderWrapper.prototype._updateAllSlidesClasses = function () {
+      var slideList = this._slideList;
 
-      this._becomeNext(this._slides[actors.next]);
+      var tempSlideList = this._createSlideList(this._actors);
 
-      if (this._slides.length > 2) this._becomePrev(this._slides[actors.prev]);
+      var tempSlideListArr = __spread(tempSlideList.active, tempSlideList.next, tempSlideList.prev);
 
-      this._updateSlideState(this._slide, actors);
-    };
+      var idleList = __spread(slideList.active, slideList.next, slideList.prev).filter(function (s) {
+        return tempSlideListArr.indexOf(s) === -1;
+      });
 
-    SliderWrapper.prototype._updateSlideState = function (slide, actors) {
-      slide.active = this._slides[actors.active];
-      slide.next = this._slides[actors.next];
-      slide.prev = this._slides[actors.prev];
+      this._slideList = tempSlideList;
+
+      this._updateSlidesClasses(idleList);
+
+      this._updateSlidesClasses(tempSlideList.active, Classes.slides.active);
+
+      this._updateSlidesClasses(tempSlideList.next, Classes.slides.next);
+
+      if (this._slides.length > 2) this._updateSlidesClasses(tempSlideList.prev, Classes.slides.prev);
     };
     /**
-     * @description Graphicaly move the slide in idle position away from the slider
+     * @description Graphicaly move the slide in idle/active/next/prev position
      */
 
 
-    SliderWrapper.prototype._becomeIdle = function (slide) {
-      classRemove(slide, Classes.slides.active);
-      classRemove(slide, Classes.slides.next);
-      classRemove(slide, Classes.slides.prev);
-    };
-    /**
-     * @description Graphicaly move the slide in active position of the slider
-     */
+    SliderWrapper.prototype._updateSlidesClasses = function (slides, className) {
+      var e_1, _a;
 
+      if (className === void 0) {
+        className = '';
+      }
 
-    SliderWrapper.prototype._becomeActive = function (slide) {
-      classRemove(slide, Classes.slides.prev);
-      classRemove(slide, Classes.slides.next);
-      classAdd(slide, Classes.slides.active);
-    };
-    /**
-     * @description Graphicaly move the slide a the beggining of the slider
-     */
-
-
-    SliderWrapper.prototype._becomePrev = function (slide) {
-      classRemove(slide, Classes.slides.active);
-      classRemove(slide, Classes.slides.next);
-      classAdd(slide, Classes.slides.prev);
-    };
-    /**
-     * @description Graphicaly move the slide a the end of the slider
-     */
-
-
-    SliderWrapper.prototype._becomeNext = function (slide) {
-      classRemove(slide, Classes.slides.active);
-      classRemove(slide, Classes.slides.prev);
-      classAdd(slide, Classes.slides.next);
+      try {
+        for (var slides_1 = __values(slides), slides_1_1 = slides_1.next(); !slides_1_1.done; slides_1_1 = slides_1.next()) {
+          var slide = slides_1_1.value;
+          classRemove(slide, Classes.slides.active);
+          classRemove(slide, Classes.slides.next);
+          classRemove(slide, Classes.slides.prev);
+          if (className) classAdd(slide, className);
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (slides_1_1 && !slides_1_1.done && (_a = slides_1.return)) _a.call(slides_1);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
     };
 
     return SliderWrapper;
