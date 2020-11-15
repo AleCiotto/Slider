@@ -7,7 +7,7 @@ const firstSlide: number = 0;
 const slidesQuantity: number = 5;
 
 describe('testing the direction change', () => {
-  const actors = new Actors({ active: firstSlide, next: firstSlide + 1, prev: slidesQuantity });
+  const actors = new Actors({ active: [firstSlide], next: [firstSlide + 1], prev: [slidesQuantity] }, slidesQuantity);
   
   test('on next change actors correctly', () => {
     let currentActors: ICurrentActors = actors.change(Direction.Next);
