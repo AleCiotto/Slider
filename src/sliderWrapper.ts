@@ -80,8 +80,8 @@ export class SliderWrapper {
   private _updateAllSlidesClasses() {
     let slideList = this._slideList;
     let tempSlideList = this._createSlideList(this._actors);
-    let tempSlideListArr = [...tempSlideList.active, ...tempSlideList.next, ...tempSlideList.prev];
-    let idleList = [...slideList.active, ...slideList.next, ...slideList.prev].filter(s => tempSlideListArr.indexOf(s) === -1);
+    let tempSlideListArr = tempSlideList.active.concat(tempSlideList.next, tempSlideList.prev);
+    let idleList = slideList.active.concat(slideList.next, slideList.prev).filter(s => tempSlideListArr.indexOf(s) === -1);
 
     this._slideList = tempSlideList;
 
@@ -96,12 +96,13 @@ export class SliderWrapper {
    * @description Graphicaly move the slide in idle/active/next/prev position
    */
   private _updateSlidesClasses(slides: HTMLElement[], className: string = '') {
-    for (const slide of slides) {
-      classRemove(slide, Classes.slides.active);
-      classRemove(slide, Classes.slides.next);
-      classRemove(slide, Classes.slides.prev);
+    // for (const slide of slides) {
+    for (let i = 0; i < slides.length; i++) {
+      classRemove(slides[i], Classes.slides.active);
+      classRemove(slides[i], Classes.slides.next);
+      classRemove(slides[i], Classes.slides.prev);
       if (className)
-        classAdd(slide, className);
+        classAdd(slides[i], className);
     }
   }
 }

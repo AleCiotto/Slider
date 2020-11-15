@@ -42,56 +42,6 @@ var SlideState;
     SlideState[SlideState["Prev"] = 3] = "Prev";
 })(SlideState || (SlideState = {}));
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-}
-
-function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-}
-
-function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
-}
-
 // TODO: Evaluate if need to move this class
 // in worker
 /**
@@ -200,8 +150,8 @@ var SliderWrapper = /** @class */ (function () {
     SliderWrapper.prototype._updateAllSlidesClasses = function () {
         var slideList = this._slideList;
         var tempSlideList = this._createSlideList(this._actors);
-        var tempSlideListArr = __spread(tempSlideList.active, tempSlideList.next, tempSlideList.prev);
-        var idleList = __spread(slideList.active, slideList.next, slideList.prev).filter(function (s) { return tempSlideListArr.indexOf(s) === -1; });
+        var tempSlideListArr = tempSlideList.active.concat(tempSlideList.next, tempSlideList.prev);
+        var idleList = slideList.active.concat(slideList.next, slideList.prev).filter(function (s) { return tempSlideListArr.indexOf(s) === -1; });
         this._slideList = tempSlideList;
         this._updateSlidesClasses(idleList);
         this._updateSlidesClasses(tempSlideList.active, Classes.slides.active);
@@ -213,24 +163,14 @@ var SliderWrapper = /** @class */ (function () {
      * @description Graphicaly move the slide in idle/active/next/prev position
      */
     SliderWrapper.prototype._updateSlidesClasses = function (slides, className) {
-        var e_1, _a;
         if (className === void 0) { className = ''; }
-        try {
-            for (var slides_1 = __values(slides), slides_1_1 = slides_1.next(); !slides_1_1.done; slides_1_1 = slides_1.next()) {
-                var slide = slides_1_1.value;
-                classRemove(slide, Classes.slides.active);
-                classRemove(slide, Classes.slides.next);
-                classRemove(slide, Classes.slides.prev);
-                if (className)
-                    classAdd(slide, className);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (slides_1_1 && !slides_1_1.done && (_a = slides_1.return)) _a.call(slides_1);
-            }
-            finally { if (e_1) throw e_1.error; }
+        // for (const slide of slides) {
+        for (var i = 0; i < slides.length; i++) {
+            classRemove(slides[i], Classes.slides.active);
+            classRemove(slides[i], Classes.slides.next);
+            classRemove(slides[i], Classes.slides.prev);
+            if (className)
+                classAdd(slides[i], className);
         }
     };
     return SliderWrapper;
