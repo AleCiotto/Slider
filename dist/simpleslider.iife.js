@@ -58,7 +58,7 @@ var SimpleSlider = (function (exports) {
   var Actors =
   /** @class */
   function () {
-    function Actors(props, length) {
+    function Actors(props, lastSlide) {
       var _this = this;
 
       this.active = [];
@@ -71,23 +71,23 @@ var SimpleSlider = (function (exports) {
       var changeActors = function (direction) {
         if (direction === Direction.Next) {
           active = active.map(function (i) {
-            return i != length ? ++i : 0;
+            return i != lastSlide ? ++i : 0;
           });
           prev = prev.map(function (i) {
-            return i != length ? ++i : 0;
+            return i != lastSlide ? ++i : 0;
           });
           next = next.map(function (i) {
-            return i != length ? ++i : 0;
+            return i != lastSlide ? ++i : 0;
           });
         } else {
           active = active.map(function (i) {
-            return i ? --i : length;
+            return i ? --i : lastSlide;
           });
           prev = prev.map(function (i) {
-            return i ? --i : length;
+            return i ? --i : lastSlide;
           });
           next = next.map(function (i) {
-            return i ? --i : length;
+            return i ? --i : lastSlide;
           });
         }
 
