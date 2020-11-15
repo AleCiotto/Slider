@@ -22,9 +22,9 @@ export class SliderWrapper {
     this._options = options;
     let slides = this._slides = this._wrapElem.querySelectorAll(this._options.slides.slideSelector);
     this._slidesIndex = {
-      active: 0,
-      next: 1,
-      prev: slides.length - 1
+      active: [0],
+      next: [1],
+      prev: [slides.length - 1]
     }
     this._direction = Direction.Idle;
     this._actors = new Actors(this._slidesIndex);
@@ -38,9 +38,9 @@ export class SliderWrapper {
 
   private _createSlideList(slidesIndex: ICurrentActors): ISlide {
     return {
-      active: this._slides[slidesIndex.active],
-      prev: this._slides[slidesIndex.prev],
-      next: this._slides[slidesIndex.next]
+      active: slidesIndex.active.map(s => this._slides[s]),
+      prev: slidesIndex.prev.map(s => this._slides[s]),
+      next: slidesIndex.next.map(s => this._slides[s])
     }
   }
 

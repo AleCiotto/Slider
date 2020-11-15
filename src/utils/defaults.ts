@@ -50,9 +50,9 @@ export enum SlideState {
 }
 
 export interface ICurrentActors {
-  active: number,
-  prev: number,
-  next: number
+  active: number[],
+  prev: number[],
+  next: number[]
 }
 
 /**
@@ -60,7 +60,7 @@ export interface ICurrentActors {
  * @enum e active prev, next
  */
 export interface ISlide {
-  active: HTMLElement,
-  prev: HTMLElement,
-  next: HTMLElement
+  active: HTMLElement[],
+  prev: HTMLElement[],
+  next: HTMLElement[]
 }
