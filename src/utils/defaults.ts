@@ -49,6 +49,12 @@ export enum SlideState {
   Prev
 }
 
+/**
+ * @description The index of active, prev and next sliders
+ * @param Active should be the index of current active slide
+ * @param Prev should be the index of previous slider usualy the last slide
+ * @param Next should be the index of next slide usualy the next from active
+ */
 export interface ICurrentActors {
   active: number[],
   prev: number[],
