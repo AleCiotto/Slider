@@ -8,37 +8,102 @@ import {
  * @description Create the actors that are used to get the index of acting sliders
  */
 export class Actors {
-  public active: number[] = [];
-  public prev: number[] = [];
-  public next: number[] = [];
-  private _changeActors: (direction: Direction) => ICurrentActors;
+  private _active: number[] = [];
+  private _prev: number[] = [];
+  private _next: number[] = [];
+  private _lastIndex: number;
 
-  constructor(props: ICurrentActors, lastSlide: number) {
-    let active: number[] = props.active;
-    let prev: number[] = props.prev;
-    let next: number[] = props.next;
-
-    const changeActors = (direction: Direction): ICurrentActors => {
-      if (direction === Direction.Next) {
-        active = active.map(i => i != lastSlide ? ++i : 0);
-        prev = prev.map(i => i != lastSlide ? ++i : 0);
-        next = next.map(i => i != lastSlide ? ++i : 0);
-      } else {
-        active = active.map(i => i ? --i : lastSlide);
-        prev = prev.map(i => i ? --i : lastSlide);
-        next = next.map(i => i ? --i : lastSlide);
-      }
-      this.active = active;
-      this.prev = prev;
-      this.next = next;
-  
-      return {active, prev, next}
-    }
-
-    this._changeActors = changeActors;
+  constructor(props: ICurrentActors, lastSlideIndex: number) {
+    this._active = props.active;
+    this._prev = props.prev;
+    this._next = props.next;
+    this._lastIndex = lastSlideIndex;
   }
 
-  change(direction: Direction): ICurrentActors {
-    return this._changeActors(direction);
+  /**
+   * @description get the list of the active elements
+   */
+  get active() {
+    return this._active;
+  }
+
+  /**
+   * @description get the list of the next elements
+   */
+  get next() {
+    return this._next;
+  }
+
+  /**
+   * @description get the list of the previous elements
+   */
+  get prev() {
+    return this._prev;
+  }
+
+  /**
+   * @description get the index of the last element
+   */
+  get lastIndex() {
+    return this._lastIndex;
+  }
+
+  set active(values: number[]) {
+    this._active = values;
+  }
+
+  set next(values: number[]) {
+    this._next = values;
+  }
+
+  set prev(values: number[]) {
+    this._prev = values;
+  }
+
+  set lastIndex(value: number) {
+    this._lastIndex = value;
+  }
+
+  /**
+   * @description increase by one the values in an array up to the last index if it is bigger then the last index then it becomes zero
+   * @param indexes array of numbers
+   */
+  _increaseValue(indexes: number[]) {
+    return indexes.map(i => i != this.lastIndex ? ++i : 0);
+  }
+
+  /**
+   * @description decrease by on the values in an array up to zero if it is lower then zero then it becomes last index
+   * @param indexes array of numbers
+   */
+  _decreaseValue(indexes: number[]) {
+    return indexes.map(i => i ? --i : this.lastIndex);
+  }
+
+  /**
+   * @description update the index of slides accordingly to direction to move
+   * @param direction direction to go
+   * @param lastSlide slider last slide
+   */
+  set change(direction: Direction) {
+    switch (direction) {
+      case Direction.Next:
+        this.active = this._increaseValue(this.active);
+        this.next = this._increaseValue(this.next);
+        this.prev = this._increaseValue(this.next);
+        break;
+      case Direction.Prev:
+        this.active = this._decreaseValue(this.active);
+        this.next = this._decreaseValue(this.next);
+        this.prev = this._decreaseValue(this.next);
+        break;
+      default:
+        break;
+    }
+    
+  }
+
+  changeTo(index: number): ICurrentActors {
+    return {active: this._active, prev: this._prev, next: this._next}
   }
 }
