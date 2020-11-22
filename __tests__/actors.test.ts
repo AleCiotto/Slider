@@ -50,7 +50,7 @@ describe('testing with two slide only', () => {
   const actors = new Actors({active: [firstSlide], next: [firstSlide + 1], prev: [1]}, 1);
 
   it('previous actor should be the same as next actor on landing', () => {
-    expect(actors.next).toBe(actors.prev);
+    expect(actors._next).toBe(actors._prev);
   });
 
   it('previous actor should be the same as next actor on next move', () => {

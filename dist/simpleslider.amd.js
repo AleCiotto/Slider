@@ -57,56 +57,145 @@ define(['exports'], function (exports) { 'use strict';
   var Actors =
   /** @class */
   function () {
-    function Actors(props, lastSlide) {
-      var _this = this;
-
-      this.active = [];
-      this.prev = [];
-      this.next = [];
-      var active = props.active;
-      var prev = props.prev;
-      var next = props.next;
-
-      var changeActors = function (direction) {
-        if (direction === Direction.Next) {
-          active = active.map(function (i) {
-            return i != lastSlide ? ++i : 0;
-          });
-          prev = prev.map(function (i) {
-            return i != lastSlide ? ++i : 0;
-          });
-          next = next.map(function (i) {
-            return i != lastSlide ? ++i : 0;
-          });
-        } else {
-          active = active.map(function (i) {
-            return i ? --i : lastSlide;
-          });
-          prev = prev.map(function (i) {
-            return i ? --i : lastSlide;
-          });
-          next = next.map(function (i) {
-            return i ? --i : lastSlide;
-          });
-        }
-
-        _this.active = active;
-        _this.prev = prev;
-        _this.next = next;
-        return {
-          active: active,
-          prev: prev,
-          next: next
-        };
-      };
-
-      this._changeActors = changeActors;
+    function Actors(props, lastSlideIndex) {
+      this._active = [];
+      this._prev = [];
+      this._next = [];
+      this._active = props.active;
+      this._prev = props.prev;
+      this._next = props.next;
+      this._lastIndex = lastSlideIndex;
     }
 
-    Actors.prototype.change = function (direction) {
-      return this._changeActors(direction);
+    Object.defineProperty(Actors.prototype, "active", {
+      /**
+       * @description get the list of the active elements
+       */
+      get: function () {
+        return this._active;
+      },
+      set: function (values) {
+        this._active = values;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Actors.prototype, "next", {
+      /**
+       * @description get the list of the next elements
+       */
+      get: function () {
+        return this._next;
+      },
+      set: function (values) {
+        this._next = values;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Actors.prototype, "prev", {
+      /**
+       * @description get the list of the previous elements
+       */
+      get: function () {
+        return this._prev;
+      },
+      set: function (values) {
+        this._prev = values;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Actors.prototype, "lastIndex", {
+      /**
+       * @description get the index of the last element
+       */
+      get: function () {
+        return this._lastIndex;
+      },
+      set: function (value) {
+        this._lastIndex = value;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    /**
+     * @description increase by one the values in an array up to the last index if it is bigger then the last index then it becomes zero
+     * @param indexes array of numbers
+     */
+
+    Actors.prototype._increaseValue = function (indexes) {
+      var _this = this;
+
+      return indexes.map(function (i) {
+        return i != _this.lastIndex ? ++i : 0;
+      });
+    };
+    /**
+     * @description decrease by on the values in an array up to zero if it is lower then zero then it becomes last index
+     * @param indexes array of numbers
+     */
+
+
+    Actors.prototype._decreaseValue = function (indexes) {
+      var _this = this;
+
+      return indexes.map(function (i) {
+        return i ? --i : _this.lastIndex;
+      });
+    };
+    /**
+     * @description shift all the values accordingly to the new index
+     * @param newIndex target where to jump
+     * @param indexes array of number
+     */
+
+
+    Actors.prototype._jumpToValue = function (newIndex, indexes) {
+      var _this = this;
+
+      return indexes.map(function (i) {
+        return i + newIndex > _this.lastIndex ? i + newIndex - _this.lastIndex - 1 : i + newIndex;
+      });
     };
 
+    Object.defineProperty(Actors.prototype, "change", {
+      /**
+       * @description update the index of slides accordingly to direction to move
+       * @param direction direction to go
+       * @param lastSlide slider last slide
+       */
+      set: function (direction) {
+        switch (direction) {
+          case Direction.Next:
+            this.active = this._increaseValue(this.active);
+            this.next = this._increaseValue(this.next);
+            this.prev = this._increaseValue(this.next);
+            break;
+
+          case Direction.Prev:
+            this.active = this._decreaseValue(this.active);
+            this.next = this._decreaseValue(this.next);
+            this.prev = this._decreaseValue(this.next);
+            break;
+        }
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Actors.prototype, "changeTo", {
+      /**
+       * @description change all the actors to a certain value starting from the @index in active
+       * @param index root index to change all other
+       */
+      set: function (index) {
+        this.active = this._jumpToValue(index, this.active);
+        this.next = this._jumpToValue(index, this.next);
+        this.prev = this._jumpToValue(index, this.prev);
+      },
+      enumerable: false,
+      configurable: true
+    });
     return Actors;
   }();
 
@@ -187,7 +276,7 @@ define(['exports'], function (exports) { 'use strict';
     });
 
     SliderWrapper.prototype._animationEnd = function () {
-      this._actors.change(this.movedTo);
+      this._actors.change = this.movedTo;
 
       this._updateAllSlidesClasses();
 

@@ -81,6 +81,15 @@ export class Actors {
   }
 
   /**
+   * @description shift all the values accordingly to the new index
+   * @param newIndex target where to jump
+   * @param indexes array of number
+   */
+  _jumpToValue(newIndex: number, indexes: number[]) {
+    return indexes.map(i => i + newIndex > this.lastIndex ? i + newIndex - this.lastIndex - 1 : i + newIndex);
+  }
+
+  /**
    * @description update the index of slides accordingly to direction to move
    * @param direction direction to go
    * @param lastSlide slider last slide
@@ -100,10 +109,15 @@ export class Actors {
       default:
         break;
     }
-    
   }
 
-  changeTo(index: number): ICurrentActors {
-    return {active: this._active, prev: this._prev, next: this._next}
+  /**
+   * @description change all the actors to a certain value starting from the @index in active
+   * @param index root index to change all other
+   */
+  set changeTo(index: number) {
+    this.active = this._jumpToValue(index, this.active);
+    this.next = this._jumpToValue(index, this.next);
+    this.prev = this._jumpToValue(index, this.prev);
   }
 }

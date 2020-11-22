@@ -69,7 +69,7 @@ export class SliderWrapper {
   }
 
   private _animationEnd() {
-    this._actors.change(this.movedTo);
+    this._actors.change = this.movedTo;
     this._updateAllSlidesClasses();
     classRemove(this._wrapElem, this.movedTo === Direction.Prev ? Classes.prev : Classes.next);
     this._animating = false;
