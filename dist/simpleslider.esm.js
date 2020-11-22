@@ -271,32 +271,19 @@ var SliderWrapper = /** @class */ (function () {
 
 var Slider = /** @class */ (function () {
     function Slider(selector, options) {
-        this._options = options != null ? Object.assign(Options, options) : Options;
-        if (selector != null) {
-            this._sliderElement = typeof selector === 'string' ? document.querySelector(selector) : selector;
-            this._wrapperElement = this._sliderElement.querySelector(this._options.wrapperSelector);
-            this._wrapper = new SliderWrapper(this._wrapperElement, this._options);
-            this._prevBtn = this._sliderElement.querySelector(this._options.controls.prevBtnSelector);
-            this._nextBtn = this._sliderElement.querySelector(this._options.controls.nextBtnSelector);
-            this._init();
-        }
-        else {
-            console.error("Wrong selector for slider was used: ", selector);
-        }
+        this.element = typeof selector === 'string' ? document.querySelector(selector) : selector;
+        this.options = options != null ? Object.assign(Options, options) : Options;
+        var wrapperElement = this.element.querySelector(this.options.wrapperSelector);
+        var wrapper = new SliderWrapper(wrapperElement, this.options);
+        this._bindMoveArrowEvents(wrapper);
     }
-    Slider.prototype._init = function () {
-        if (this._prevBtn)
-            this._prevBtn.addEventListener('click', this.move.bind(this, Direction.Prev), false);
-        if (this._nextBtn)
-            this._nextBtn.addEventListener('click', this.move.bind(this, Direction.Next), false);
-    };
-    /**
-     * @description make a single move
-     */
-    Slider.prototype.move = function (direction) {
-        if (this._wrapper) {
-            this._wrapper.movedTo = direction;
-        }
+    Slider.prototype._bindMoveArrowEvents = function (wrapper) {
+        var prevBtn = this.element.querySelector(this.options.controls.prevBtnSelector);
+        var nextBtn = this.element.querySelector(this.options.controls.nextBtnSelector);
+        if (nextBtn)
+            nextBtn.addEventListener('click', function () { return wrapper.movedTo = Direction.Next; }, false);
+        if (prevBtn)
+            prevBtn.addEventListener('click', function () { return wrapper.movedTo = Direction.Prev; }, false);
     };
     return Slider;
 }());
